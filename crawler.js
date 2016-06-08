@@ -1,0 +1,196 @@
+var Promise = require('bluebird');
+var model = require('./model');
+var fs = require('fs-extra');
+var path = require('path');
+var http = require('http');
+var cheerio = require('cheerio');
+
+const NTHS_HOST = 'bdbai.tk';
+const ARCHIVE_PATH = path.join(process.env.FILE_PATH, 'archive');
+
+(function prepare() {
+    fs.ensureDirSync(ARCHIVE_PATH);
+});
+
+function logLine(str) {
+    console.log(str);
+}
+function logError(str) {
+    console.error(str);
+}
+
+function getMainPage(page) {
+    logLine('Entering entry page ' + page);
+    return new Promise(function(resolve, reject) {
+        var req = http.request({
+            method: 'POST',
+            host: NTHS_HOST,
+            path: '/webschool/News/news_list.jsp?siteId=0&typeId=news33',
+            headers: {
+                'Content-Type':   'application/x-www-form-urlencoded',
+                'Content-Length': 12 + new String(page).length
+            }
+        }, function(res) {
+            var body = '';
+            res.on('data', function(data) {
+                body += data;
+            }).on('end', function(data) {
+                body += data;
+                resolve(body);
+            }).on('error', function(err) {
+                reject(err);
+            });
+        });
+        req.write('currentPage=' + page, function() {
+            req.end();
+        });
+    });
+}
+
+function getEntries(listBody) {
+    var ret = [];
+    var $document = cheerio.load(listBody);
+    var $elems = $document('body > table:nth-child(8) > tr:nth-child(2) > td:nth-child(2) > table:nth-child(2) > tr:nth-child(2) > td > table:nth-child(3) > tr > td > a');
+    for (var i = 0; i < $elems.length; i++) {
+        var $elem = $elems[i];
+        ret.push({ url:   $elem.attribs.href,
+                   title: $elem.children[0].data,
+                   time:  Date.parse($elem.parent.parent.children[4].children[0].data.slice(1, 17))
+                });
+    }
+    logLine('Found ' + ret.length + ' entries.');
+    return ret;
+}
+
+function getFullLink(url) {
+    return new Promise(function(resolve, reject) {
+        var req = http.get({
+            host: NTHS_HOST,
+            path: url
+        }, function(res) {
+            var body = '';
+            res.on('data', function(data) {
+                body += data;
+            }).on('end', function(data) {
+                body += data;
+                resolve(body);
+            }).on('error', function(err) {
+                reject(err);
+            });
+        })
+    });
+}
+
+function fetchAttachments(entry) {
+    return getFullLink(entry.url).bind({}).then(function(body) {
+        var $document = cheerio.load(body);
+        var $hrefElem = $document('body > table:nth-child(9) > tr > td > table:nth-child(5) a[href^="/webschool/xheditor/upload/"]')[0];
+        var $textElem = $hrefElem.children[0];
+        var maxDepth = 5;
+        while ($textElem.type !== "text" && maxDepth > 0) {
+            $textElem = $textElem.children[0];
+            maxDepth--;
+        }
+        this.attachment =  {
+            title:           $textElem.data,
+            category:        $textElem.data.indexOf('高一') ? '高一' : '高二',
+            archive_url:     $hrefElem.attribs.href,
+            page_url:        entry.url
+        };
+        logLine('Fetching archive: ' + this.attachment.title + ' ' + this.attachment.archive_url);
+        return new Promise(function(resolve, reject) {
+            var that = this;
+            var stream = fs.createWriteStream(path.join(ARCHIVE_PATH, this.attachment.title),
+                {
+                    encoding: 'binary'
+                });
+            var req = http.request({
+                host: NTHS_HOST,
+                path: encodeURI(that.attachment.archive_url)
+            }, function(res) {
+                res.pipe(stream);
+                res.on('end', function() {
+                    logLine('Fetched archive: ' + that.attachment.title);
+                    resolve(that.attachment);
+                }).on('error', function(e) {
+                    logError('Failed fetching archive: ' + that.attachment.title);
+                    reject(e);
+                });
+            });
+            req.end();
+        }.bind(this));
+    });
+}
+
+var promiseSharedScope = {};
+
+module.exports = function() {
+    logLine('Crawling started.');
+    var promise = Promise.all([
+        // Load crawler info...
+        model.prepare.then(function(_models) {
+            this.models = _models;
+            return _models.Crawler.findOne({}).exec();
+        }.bind(promiseSharedScope)),
+        // ... and crawl parallelly.
+        getMainPage(2),
+    ]).bind(promiseSharedScope).spread(function(crawler, page) {
+        // Find out new entries.
+        var newEntries = [];
+        this.crawler = crawler || new this.models.Crawler({
+            last_entry_time: new Date(0)
+        });
+        var lastEntryTime = this.crawler.last_entry_time;
+        this.latestEntryTime = getEntries(page).reduce(function(prev,curr) {
+            if (curr.time > lastEntryTime &&
+                typeof curr.title !== 'undefined' && // remove highlighted entries
+                curr.title.indexOf('寒假作业') !== -1) {
+                newEntries.push(curr);
+            }
+            return prev > curr.time ? prev : curr.time;
+        });
+        logLine('Found ' + newEntries.length + ' new entries.')
+        
+        return Promise.all(newEntries.map(function(entry) {
+            return fetchAttachments(entry);
+         }));
+    }).then(function(attachments) {
+        // Save archives.
+        return Promise.all(attachments.map(function(attachment) {
+            var archive = new this.models.Archive({
+                title:         attachment.title,
+                archive_url:   attachment.archive_url,
+                page_url:      attachment.page_url,
+                category:      attachment.category
+            });
+            logLine('Saving archive: ' + archive.title);
+            return archive.save().then(function() {
+                logLine('Saved archive: ' + archive.title);
+            }).catch(function(err) {
+                logError('Error while saving archive: ' + archive.title);
+                logError(err);
+            });
+        }, this));
+    }).then(function() {
+        // Save new crawler info.
+        this.crawler.last_entry_time = new Date(this.latestEntryTime);
+        this.crawler.last_crawl_time = new Date();
+        logLine('Saving crawling data.');
+        return this.models.Crawler.update(
+            {},
+            this.crawler,
+            { upsert: true, setDefaultsOnInsert: true }
+        ).then(function() {
+            logLine('Crawling data saved');
+        }, function(err) {
+            logError('Error while saving crawling data.');
+            logError(err);
+        });
+    }).then(function() {
+        logLine('Crawling finished.');
+    }).catch(function(err) {
+        logError('Error occurred while crawling:');
+        logError(err);
+    });
+    return promise;
+}

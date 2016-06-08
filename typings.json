@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "bluebird": "registry:npm/bluebird#3.3.4+20160531224558",
+    "cheerio": "registry:npm/cheerio#0.20.0+20160422172414",
+    "mongoose": "registry:npm/mongoose#4.3.5+20160531094808"
+  },
+  "globalDependencies": {
+    "express": "registry:dt/express#4.0.0+20160317120654",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160602151406",
+    "fs-extra": "registry:dt/fs-extra#0.0.0+20160319124112",
+    "node": "registry:dt/node#6.0.0+20160602155235",
+    "serve-static": "registry:dt/serve-static#0.0.0+20160501131543"
+  }
+}

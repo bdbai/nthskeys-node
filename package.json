@@ -1,0 +1,25 @@
+{
+  "name": "nthskeys",
+  "version": "1.0.0",
+  "description": "Fetch, organize and share answer keys from Nths.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express",
+    "mongodb"
+  ],
+  "author": "bdbai <htbai1998m@hotmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "body-parser": "^1.15.1",
+    "cheerio": "^0.19.0",
+    "express": "^4.13.4",
+    "fs-extra": "^0.30.0",
+    "mongoose": "^4.4.19",
+    "xmldom": "^0.1.22",
+    "xpath": "0.0.23"
+  }
+}
