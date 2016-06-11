@@ -19,11 +19,12 @@ const DEST_PATH = path.join(process.env.FILE_PATH, 'file');
 
 var _models = {};
 var _archive = {};
+var tmpDest = '';
 
-function logLine(str) {
+var logLine = function(str) {
     console.log(str);
 }
-function logError(str) {
+var logError = function(str) {
     console.error(str);
 }
 
@@ -64,12 +65,12 @@ function processDir(pathPrefix, dirName, outerCategory, innerCategory) {
                 innerCategory
             ));
         } else {
-            processDir(
+            promises.push(processDir(
                 pathPrefix,
                 path.join(dirName, element),
                 outerCategory,
                 innerCategory
-            );
+            ));
         }
     }
     return Promise.all(promises);
@@ -115,48 +116,46 @@ function processRootDir(tmpDest) {
 
 // x -y -bd -p{password} -o{outputdir}
 
-function extract(archivePath, password, outputCallback) {
+function extract(archivePath, password) {
+    tmpDest = path.join('/tmp', 'nthstemp' + Math.floor(Math.random() * 1000));
     return new Promise(function(resolve, reject) {
-        var tmpDest = path.join('/tmp', 'nthstemp' + Math.floor(Math.random() * 1000));
-        var correctPassword = true;
         var extractProcess = childProcess.spawn('7z', ['x', '-y', '-bd', '-p' + password, '-o' + tmpDest, archivePath]);
         extractProcess.stdout.on('data', function(data) {
             var str = data.toString();
-            if (str.indexOf('Wrong password?') !== -1) {
-                correctPassword = false;
-            }
-            if (typeof outputCallback === 'function') {
-                outputCallback(str);
-            }
             logLine('7z says:');
             logLine(str);
         });
         extractProcess.on('close', function(code) {
             if (code === 0) {
-                resolve(tmpDest);
+                resolve();
             } else {
-                // Wrong password: 2
                 fs.removeSync(tmpDest);
-                reject(new Error(code));
+                // Wrong password: 2
+                reject(new Error('7z exits with ' + code));
             }
         });
     });
 }
 
-module.exports = function(models, archive, password, outputCallback) {
+module.exports = function(models, archive, password, logLineCallback, logErrorCallback) {
     _models = models;
     _archive = archive;
+    if (typeof logLineCallback === 'function') {
+        logLine = logLineCallback;
+    }
+    if (typeof logErrorCallback === 'function') {
+        logError = logErrorCallback;
+    }
     logLine('Extracting from: ' + archive.title);
     return extract(
         path.join(process.env.FILE_PATH, 'archive', archive.title),
-        password,
-        outputCallback
-    ).then(function(tmpDest) {
+        password
+    ).then(function() {
         logLine('Extraction done. Saving...');
-        return processRootDir(tmpDest).then(function() {
-            logLine('Saved. Removing temp files...');
-            fs.removeSync(tmpDest);
-            logLine('Done!');
-        });
+        return processRootDir(tmpDest)
+    }).then(function() {
+        logLine('Saved. Removing temp files...');
+        fs.removeSync(tmpDest);
+        logLine('Done!');
     });
 }

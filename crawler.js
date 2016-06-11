@@ -7,10 +7,13 @@ var cheerio = require('cheerio');
 
 const NTHS_HOST = 'bdbai.tk';
 const ARCHIVE_PATH = path.join(process.env.FILE_PATH, 'archive');
+const ENTRYLIST_PATH= '/webschool/News/news_list.jsp?siteId=0&typeId=news33';
+const ENTRIES_SELECTOR = 'body > table:nth-child(8) > tr:nth-child(2) > td:nth-child(2) > table:nth-child(2) > tr:nth-child(2) > td > table:nth-child(3) > tr > td > a';
+const ATTACHMENT_SELECTOR = 'body > table:nth-child(9) > tr > td > table:nth-child(5) a[href^="/webschool/xheditor/upload/"]';
 
 (function prepare() {
     fs.ensureDirSync(ARCHIVE_PATH);
-});
+})();
 
 function logLine(str) {
     console.log(str);
@@ -20,12 +23,11 @@ function logError(str) {
 }
 
 function getMainPage(page) {
-    logLine('Entering entry page ' + page);
     return new Promise(function(resolve, reject) {
         var req = http.request({
             method: 'POST',
             host: NTHS_HOST,
-            path: '/webschool/News/news_list.jsp?siteId=0&typeId=news33',
+            path: ENTRYLIST_PATH,
             headers: {
                 'Content-Type':   'application/x-www-form-urlencoded',
                 'Content-Length': 12 + new String(page).length
@@ -50,7 +52,7 @@ function getMainPage(page) {
 function getEntries(listBody) {
     var ret = [];
     var $document = cheerio.load(listBody);
-    var $elems = $document('body > table:nth-child(8) > tr:nth-child(2) > td:nth-child(2) > table:nth-child(2) > tr:nth-child(2) > td > table:nth-child(3) > tr > td > a');
+    var $elems = $document(ENTRIES_SELECTOR);
     for (var i = 0; i < $elems.length; i++) {
         var $elem = $elems[i];
         ret.push({ url:   $elem.attribs.href,
@@ -58,7 +60,6 @@ function getEntries(listBody) {
                    time:  Date.parse($elem.parent.parent.children[4].children[0].data.slice(1, 17))
                 });
     }
-    logLine('Found ' + ret.length + ' entries.');
     return ret;
 }
 
@@ -84,7 +85,7 @@ function getFullLink(url) {
 function fetchAttachments(entry) {
     return getFullLink(entry.url).bind({}).then(function(body) {
         var $document = cheerio.load(body);
-        var $hrefElem = $document('body > table:nth-child(9) > tr > td > table:nth-child(5) a[href^="/webschool/xheditor/upload/"]')[0];
+        var $hrefElem = $document(ATTACHMENT_SELECTOR)[0];
         var $textElem = $hrefElem.children[0];
         var maxDepth = 5;
         while ($textElem.type !== "text" && maxDepth > 0) {
@@ -124,14 +125,11 @@ function fetchAttachments(entry) {
 
 var promiseSharedScope = {};
 
-module.exports = function() {
-    logLine('Crawling started.');
+module.exports = function(_model) {
+    promiseSharedScope.models = _model;
     var promise = Promise.all([
         // Load crawler info...
-        model.prepare.then(function(_models) {
-            this.models = _models;
-            return _models.Crawler.findOne({}).exec();
-        }.bind(promiseSharedScope)),
+        promiseSharedScope.models.Crawler.findOne({}).exec(),
         // ... and crawl parallelly.
         getMainPage(2),
     ]).bind(promiseSharedScope).spread(function(crawler, page) {
@@ -141,7 +139,8 @@ module.exports = function() {
             last_entry_time: new Date(0)
         });
         var lastEntryTime = this.crawler.last_entry_time;
-        this.latestEntryTime = getEntries(page).reduce(function(prev,curr) {
+        var entries = getEntries(page);
+        this.latestEntryTime = entries.reduce(function(prev,curr) {
             if (curr.time > lastEntryTime &&
                 typeof curr.title !== 'undefined' && // remove highlighted entries
                 curr.title.indexOf('寒假作业') !== -1) {
@@ -149,7 +148,8 @@ module.exports = function() {
             }
             return prev > curr.time ? prev : curr.time;
         });
-        logLine('Found ' + newEntries.length + ' new entries.')
+        this.newEntryCount = newEntries.length;
+        logLine('Crawler found ' + this.newEntryCount + ' new entries out of ' + entries.length);
         
         return Promise.all(newEntries.map(function(entry) {
             return fetchAttachments(entry);
@@ -164,33 +164,22 @@ module.exports = function() {
                 category:      attachment.category
             });
             logLine('Saving archive: ' + archive.title);
-            return archive.save().then(function() {
-                logLine('Saved archive: ' + archive.title);
-            }).catch(function(err) {
-                logError('Error while saving archive: ' + archive.title);
-                logError(err);
-            });
+            return archive.save();
         }, this));
     }).then(function() {
         // Save new crawler info.
         this.crawler.last_entry_time = new Date(this.latestEntryTime);
         this.crawler.last_crawl_time = new Date();
-        logLine('Saving crawling data.');
+        if (this.newEntryCount > 0) {
+            logLine('Archive data saved. Saving crawling data.');
+        }
         return this.models.Crawler.update(
             {},
             this.crawler,
             { upsert: true, setDefaultsOnInsert: true }
-        ).then(function() {
-            logLine('Crawling data saved');
-        }, function(err) {
-            logError('Error while saving crawling data.');
-            logError(err);
-        });
+        );
     }).then(function() {
-        logLine('Crawling finished.');
-    }).catch(function(err) {
-        logError('Error occurred while crawling:');
-        logError(err);
+        return this.newEntryCount;
     });
     return promise;
 }

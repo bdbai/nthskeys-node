@@ -21,13 +21,24 @@ apiRouter.route('/archives').get(function(req, res) {
 
 app.use('/api', apiRouter);
 
-setInterval(function() {
-    crawler().catch(function(err) {
+function crawl() {
+    crawler(models).catch(function(err) {
         console.error('Crawler died!');
     });
-}, 1800000);
+}
+
+setInterval(function() {
+    crawl();
+}, 7200000);
 
 model.prepare.then(function(_models) {
     models = _models;
+    // crawl();
+    models.Archive.findOne({ title: '2014级高二寒假作业答案（2.20）.rar' })
+    .exec().then(function(archive) {
+        return extractor(models, archive, 'szsz3694hrcw6984');
+    }).then(function() {
+        console.log('Extraction done!');
+    });
     app.listen(process.env.PORT || 9004);
 });

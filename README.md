@@ -6,20 +6,19 @@ NthsKeys 作业答案计划 - Node ver.
 
 某中学每年都把假期作业答案加密压缩并上传至其官网，且没有归类，这给学生带来了很大麻烦。我开启这个项目，目的是通过自动化的方式来简化答案下载、解压、归类这一过程。
 
-## 内容
+## 架构
+服务器端使用 Express 为服务框架， MongoDB 为数据库。前端使用 React 和 Bootstrap。
 
-### `DataModel`
+## 构建和运行
+### 前端
 
-Entity Framework (Code First) 结构化数据模型。数据库使用 MySQL。
+```bash
+npm build
+```
 
-### `KeyCrawler`
+### 服务端
 
-爬虫，用于爬取所有答案存档，并自动下载、存档。
+```bash
+node server.js
+```
 
-### `Uncompress`
-
-调用 7z 解压并自动归类的类库。
-
-### `PasswordEntrance`
-
-收集密码并进行解压的 GUI。
