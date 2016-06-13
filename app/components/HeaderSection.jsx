@@ -12,10 +12,10 @@ export default class HeaderSection extends React.Component {
                     <div className="navbar-collapse">
                         <ul className="nav navbar-nav">
                             <li>
-                                <Link to="/filelist">文件</Link>
+                                <Link to="/files">文件</Link>
                             </li>
                             <li>
-                                <Link to="/archivelist">压缩包</Link>
+                                <Link to="/archives">压缩包</Link>
                             </li>
                         </ul>
                     </div>

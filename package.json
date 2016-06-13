@@ -21,5 +21,8 @@
     "mongoose": "^4.4.19",
     "xmldom": "^0.1.22",
     "xpath": "0.0.23"
+  },
+  "devDependencies": {
+    "express-cors": "0.0.3"
   }
 }

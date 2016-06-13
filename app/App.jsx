@@ -3,6 +3,7 @@ import { render } from 'ReactDOM';
 import { Router, Route, IndexRoute } from 'ReactRouter';
 
 import HeaderSection from './components/HeaderSection';
+import ArchiveList from './views/ArchiveList';
 
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
@@ -25,7 +26,7 @@ var rootInstance = render((
   <Router>
     <Route path="/" component={App}>
       <IndexRoute component={HeaderSection} />
-      <Route path="archives" component={HeaderSection} />
+      <Route path="archives" component={ArchiveList} />
     </Route>
   </Router>
 ), document.getElementById('app-frame'));
