@@ -157,10 +157,12 @@ module.exports = function(_model) {
     }).then(function(attachments) {
         // Save archives.
         return Promise.all(attachments.map(function(attachment) {
+            var fileName = path.join(ARCHIVE_PATH, attachment.title);
             var archive = new this.models.Archive({
                 title:         attachment.title,
                 archive_url:   attachment.archive_url,
                 page_url:      attachment.page_url,
+                size:          fs.statSync(fileName).size,
                 category:      attachment.category
             });
             logLine('Saving archive: ' + archive.title);

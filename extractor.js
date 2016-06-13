@@ -39,10 +39,11 @@ function determineCategory(path, categories) {
     return '杂项';
 }
 
-function processFile(filePath, outerCategory, innerCategory) {
+function processFile(filePath, fileSize, outerCategory, innerCategory) {
     logLine('Saving file: ' + filePath);
     var fileModel = new _models.File({
         path:       filePath,
+        size:       fileSize,
         archive:    _archive,
         category:   innerCategory + '-' + outerCategory,
     });
@@ -58,9 +59,11 @@ function processDir(pathPrefix, dirName, outerCategory, innerCategory) {
     var length = contents.length;
     for (var i = 0; i < length; i++){
         var element = contents[i];
-        if (fs.statSync(path.join(pathPrefix, dirName, element)).isFile()) {
+        var stat = fs.statSync(path.join(pathPrefix, dirName, element));
+        if (stat.isFile()) {
             promises.push(processFile(
                 path.join(dirName, element),
+                stat.size,
                 outerCategory,
                 innerCategory
             ));
@@ -91,9 +94,11 @@ function processRootDir(tmpDest) {
                 innerCategory,
                 element
             )
-            if (fs.statSync(fullPath).isFile()) {
+            var stat = fs.statSync(fullPath);
+            if (stat.isFile()) {
                 promises.push(processFile(
                     element,
+                    stat.size,
                     _archive.category,
                     innerCategory
                 ).then(function() {
@@ -159,3 +164,4 @@ module.exports = function(models, archive, password, logLineCallback, logErrorCa
         logLine('Done!');
     });
 }
+

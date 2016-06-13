@@ -33,12 +33,6 @@ setInterval(function() {
 
 model.prepare.then(function(_models) {
     models = _models;
-    // crawl();
-    models.Archive.findOne({ title: '2014级高二寒假作业答案（2.20）.rar' })
-    .exec().then(function(archive) {
-        return extractor(models, archive, 'szsz3694hrcw6984');
-    }).then(function() {
-        console.log('Extraction done!');
-    });
+    crawl(models);
     app.listen(process.env.PORT || 9004);
 });

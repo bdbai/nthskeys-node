@@ -11,6 +11,7 @@ function setSchema() {
         title:       String,
         archive_url: String,
         page_url:    String,
+        size:        Number,
         status:      { type: String, index: true, enum: ['unreleased', 'processing', 'released'], default: 'unreleased' },
         category:    { type: String, index: true },
         released_by: String,
@@ -23,6 +24,7 @@ function setSchema() {
     // File
     var fileSchema = new schema({
         path:       String,
+        size:       Number,
         archive:    { type: schema.Types.ObjectId, ref: 'archive', index: true },
         click:      { type: Number, default: 0 },
         category:   { type: String, index: true },
