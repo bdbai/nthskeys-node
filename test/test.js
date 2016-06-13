@@ -14,5 +14,8 @@ model.prepare.then(function(_models) {
     }).then(function() {
         console.log('Extraction done!');
         process.exit();
+    }).catch(function(err) {
+        console.error(err);
+        process.exit(1);
     });
 });

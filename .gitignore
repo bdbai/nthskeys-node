@@ -41,3 +41,6 @@ typings
 
 # Production files
 files
+
+# Self-defined test config
+test/config.sh
