@@ -42,10 +42,11 @@ function determineCategory(path, categories) {
 function processFile(filePath, fileSize, outerCategory, innerCategory) {
     logLine('Saving file: ' + filePath);
     var fileModel = new _models.File({
-        path:       filePath,
-        size:       fileSize,
-        archive:    _archive,
-        category:   innerCategory + '-' + outerCategory,
+        path:             filePath,
+        size:             fileSize,
+        archive:          _archive,
+        subject_category: innerCategory,
+        grade_category:   outerCategory,
     });
     return fileModel.save().then(function() {
         logLine('File saved: ' + filePath);
@@ -79,7 +80,7 @@ function processDir(pathPrefix, dirName, outerCategory, innerCategory) {
     return Promise.all(promises);
 }
 
-function processRootDir(tmpDest) {
+function processRootDir(outerCategory, tmpDest) {
     var moveAsync = Promise.promisify(fs.move);
     var promises = [];
     var contents = fs.readdirSync(tmpDest);
@@ -91,6 +92,7 @@ function processRootDir(tmpDest) {
             var innerCategory = determineCategory(fullPath, SUBJECTS);
             var targetPath = path.join(
                 DEST_PATH,
+                outerCategory,
                 innerCategory,
                 element
             )
@@ -157,7 +159,7 @@ module.exports = function(models, archive, password, logLineCallback, logErrorCa
         password
     ).then(function() {
         logLine('Extraction done. Saving...');
-        return processRootDir(tmpDest)
+        return processRootDir(_archive.category, tmpDest)
     }).then(function() {
         logLine('Saved. Removing temp files...');
         fs.removeSync(tmpDest);

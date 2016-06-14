@@ -1,4 +1,5 @@
 var Promise = require('bluebird');
+var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('express-cors')
@@ -9,7 +10,17 @@ var extractor = require('./extractor');
 
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Define static source static m.w. .
 app.use(express.static('static'));
+// Define extracted file static m.w..
+app.use('/download', express.static(
+    path.join(process.env.FILE_PATH, 'file'), 
+    {
+        maxAge: 31536000000
+    })
+);
+
 if (process.env.NODE_ENV === 'development') {
     console.log('CORS enabled.');
     app.use(cors({
@@ -22,6 +33,11 @@ var models = {};
 var apiRouter = express.Router();
 apiRouter.route('/archives').get(function(req, res) {
     models.Archive.find({}).exec().then(function(result) {
+        res.json(result);
+    });
+});
+apiRouter.route('/files').get(function(req, res) {
+    models.File.find({}).exec().then(function(result) {
         res.json(result);
     });
 });

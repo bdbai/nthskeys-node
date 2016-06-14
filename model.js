@@ -23,12 +23,13 @@ function setSchema() {
 
     // File
     var fileSchema = new schema({
-        path:       String,
-        size:       Number,
-        archive:    { type: schema.Types.ObjectId, ref: 'archive', index: true },
-        click:      { type: Number, default: 0 },
-        category:   { type: String, index: true },
-        created_at: { type: Date, index: true, default: Date.now() },
+        path:             String,
+        size:             Number,
+        archive:          { type: schema.Types.ObjectId, ref: 'archive', index: true },
+        click:            { type: Number, default: 0 },
+        subject_category: { type: String, index: true },
+        grade_category:   { type: String, index: true },
+        created_at:       { type: Date, index: true, default: Date.now() },
     });
     var fileModel = mongoose.model('file', fileSchema);
     

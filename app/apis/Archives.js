@@ -1,14 +1,14 @@
 import jQuery from 'jQuery';
 
-const apiPrefix = 'http://localhost:9004/api';
+import config from './ApiConfig.js';
 
-class Archive {
+class Archives {
     static getArchives() {
         return jQuery.ajax({
-            url: `${apiPrefix}/archives`,
+            url: `${config.apiPrefix}/archives`,
             dataType: 'json'
         });
     }
 }
 
-export default Archive;
+export default Archives;

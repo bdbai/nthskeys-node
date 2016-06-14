@@ -1,5 +1,6 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var webpack = require('webpack');
 
 module.exports = {
     entry: './App.jsx',
@@ -28,6 +29,7 @@ module.exports = {
             title: 'NthsKeys',
             template: 'index.development.ejs',
             hash: true
-        })
+        }),
+        new webpack.EnvironmentPlugin(["NODE_ENV"])
     ]
 }

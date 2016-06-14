@@ -1,7 +1,7 @@
 import React from 'React';
 import jQuery from 'jQuery';
 
-import ArchiveModel from '../apis/Archive';
+import ArchiveModel from '../apis/Archives';
 import Loading from '../components/Loading';
 import ArchiveItem from '../components/ArchiveItem';
 
