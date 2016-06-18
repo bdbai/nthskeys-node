@@ -126,9 +126,13 @@ function processRootDir(outerCategory, tmpDest) {
 function extract(archivePath, password) {
     tmpDest = path.join('/tmp', 'nthstemp' + Math.floor(Math.random() * 1000));
     return new Promise(function(resolve, reject) {
+        var wrongPassword = false;
         var extractProcess = childProcess.spawn('7z', ['x', '-y', '-bd', '-p' + password, '-o' + tmpDest, archivePath]);
         extractProcess.stdout.on('data', function(data) {
             var str = data.toString();
+            if (!wrongPassword && str.indexOf('Wrong password?') !== -1) {
+                wrongPassword = true;
+            }
             logLine('7z says:');
             logLine(str);
         });
@@ -137,8 +141,11 @@ function extract(archivePath, password) {
                 resolve();
             } else {
                 fs.removeSync(tmpDest);
-                // Wrong password: 2
-                reject(new Error('7z exits with ' + code));
+                if (wrongPassword) {
+                    reject(new Error('Wrong password.'));
+                } else {
+                    reject(new Error('7z exits with ' + code));
+                }
             }
         });
     });

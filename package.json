@@ -4,7 +4,8 @@
   "description": "Fetch, organize and share answer keys from Nths.",
   "main": "server.js",
   "scripts": {
-    "test": "./test/run.sh"
+    "start": "./test/start.sh",
+    "test": "./test/test.sh"
   },
   "keywords": [
     "express",
@@ -19,8 +20,7 @@
     "express": "^4.13.4",
     "fs-extra": "^0.30.0",
     "mongoose": "^4.4.19",
-    "xmldom": "^0.1.22",
-    "xpath": "0.0.23"
+    "morgan": "^1.7.0"
   },
   "devDependencies": {
     "express-cors": "0.0.3"

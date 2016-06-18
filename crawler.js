@@ -94,7 +94,7 @@ function fetchAttachments(entry) {
         }
         this.attachment =  {
             title:           $textElem.data,
-            category:        $textElem.data.indexOf('高一') ? '高一' : '高二',
+            category:        ($textElem.data.indexOf('高一') !== -1) ? '高一' : '高二',
             archive_url:     $hrefElem.attribs.href,
             page_url:        entry.url
         };
@@ -131,7 +131,7 @@ module.exports = function(_model) {
         // Load crawler info...
         promiseSharedScope.models.Crawler.findOne({}).exec(),
         // ... and crawl parallelly.
-        getMainPage(2),
+        getMainPage(3),
     ]).bind(promiseSharedScope).spread(function(crawler, page) {
         // Find out new entries.
         var newEntries = [];
