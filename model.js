@@ -29,10 +29,10 @@ function setSchema() {
         click:            { type: Number, default: 0 },
         subject_category: { type: String, index: true },
         grade_category:   { type: String, index: true },
-        created_at:       { type: Date, index: true, default: Date.now() },
+        created_at:       { type: Date, index: true, default: Date.now() }
     });
     var fileModel = mongoose.model('file', fileSchema);
-    
+
     // Crawler
     var crawlerSchema = new schema({
         last_entry_time: { type: Date },
@@ -41,7 +41,9 @@ function setSchema() {
     var crawlerModel = mongoose.model('crawler', crawlerSchema);
 
     return new Promise(function(resolve) {
-        if (typeof resolve !== 'function') return;
+        if (typeof resolve !== 'function')  {
+            return;
+        }
         resolve({
             Archive: archiveModel,
             File:    fileModel,

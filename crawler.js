@@ -150,7 +150,7 @@ module.exports = function(_model) {
         });
         this.newEntryCount = newEntries.length;
         logLine('Crawler found ' + this.newEntryCount + ' new entries out of ' + entries.length);
-        
+
         return Promise.all(newEntries.map(function(entry) {
             return fetchAttachments(entry);
          }));

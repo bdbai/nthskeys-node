@@ -28,7 +28,7 @@ app.use(morgan('combined', {stream: accessLogStream}));
 app.use(express.static('static'));
 // Define extracted file static m.w..
 app.use('/download', express.static(
-    path.join(process.env.FILE_PATH, 'file'), 
+    path.join(process.env.FILE_PATH, 'file'),
     {
         maxAge: 31536000000
     })
@@ -95,7 +95,7 @@ app.post('/release', function(req, res) {
             res.json({ message: '已解压。' });
             return;
         }
-        return extractor(models, archive, releasePw, 
+        return extractor(models, archive, releasePw,
             function(logLine) {
                 console.log(logLine);
                 res.write(logLine + '\r\n');
