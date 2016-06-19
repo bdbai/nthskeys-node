@@ -1,6 +1,8 @@
 NthsKeys 作业答案计划 - Node ver.
 =========================
 
+[![Join the chat at https://gitter.im/bdbai/nthskeys-node](https://badges.gitter.im/bdbai/nthskeys-node.svg)](https://gitter.im/bdbai/nthskeys-node?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## 目的
 [省苏州十中官网](http://nths.cn/News/index.jsp)
 
