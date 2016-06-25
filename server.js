@@ -21,7 +21,7 @@ const ACCESS_LOG_PATH = path.join(process.env.FILE_PATH, 'log', 'access.log');
 const accessLogStream = fs.createWriteStream(ACCESS_LOG_PATH, {flags: 'a'});
 
 var app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(morgan('combined', {stream: accessLogStream}));
 
 // Define static source static m.w. .
@@ -54,11 +54,10 @@ apiRouter.route('/files').get(function(req, res) {
         res.json(result);
     });
 });
-app.use('/api', apiRouter);
 
 global.archiveReleasing = false;
 // Archive release
-app.post('/release', function(req, res) {
+apiRouter.route('/release').post(function(req, res) {
     var archiveId = req.body.archive_id || '';
     var releasePw = req.body.release_pw || '';
     var releaseBy = req.body.release_by || '';
@@ -127,6 +126,7 @@ app.post('/release', function(req, res) {
         res.end('保存信息时出错了。');
     });
 });
+app.use('/api', apiRouter);
 
 function crawl() {
     crawler(models).catch(function(err) {
