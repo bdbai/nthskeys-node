@@ -15,7 +15,7 @@ NthsKeys 作业答案计划 - Node ver.
 ### 构建
 
 ```bash
-npm install
+npm run-script build
 ```
 
 ### 运行
