@@ -136,6 +136,14 @@ function extract(archivePath, password) {
             logLine('7z says:');
             logLine(str);
         });
+        extractProcess.stderr.on('data', function(data) {
+            var str = data.toString();
+            if (!wrongPassword && str.indexOf('Wrong password?') !== -1) {
+                wrongPassword = true;
+            }
+            logLine('7z complains:');
+            logLine(str);
+        });
         extractProcess.on('close', function(code) {
             if (code === 0) {
                 resolve();
