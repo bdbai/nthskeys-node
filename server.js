@@ -5,7 +5,6 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
-var cors = require('express-cors')
 
 var model = require('./model');
 var crawler = require('./crawler');
@@ -25,7 +24,11 @@ app.use(bodyParser.json());
 app.use(morgan('combined', {stream: accessLogStream}));
 
 // Define static source static m.w. .
-app.use(express.static('static'));
+app.use('/static', express.static('static',
+    {
+        maxAge: 31536000000
+    })
+);
 // Define extracted file static m.w..
 app.use('/download', express.static(
     path.join(process.env.FILE_PATH, 'file'),
@@ -36,7 +39,7 @@ app.use('/download', express.static(
 
 if (process.env.NODE_ENV === 'development') {
     console.log('CORS enabled.');
-    app.use(cors({
+    app.use(require('express-cors')({
         allowedOrigins: [ 'localhost:8080' ]
     }));
 }
@@ -127,6 +130,9 @@ apiRouter.route('/release').post(function(req, res) {
     });
 });
 app.use('/api', apiRouter);
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, 'static', 'index.html'));
+})
 
 function crawl() {
     crawler(models).catch(function(err) {

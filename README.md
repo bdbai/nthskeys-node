@@ -12,15 +12,21 @@ NthsKeys 作业答案计划 - Node ver.
 服务器端使用 Express 为服务框架， MongoDB 为数据库。前端使用 React 和 Bootstrap。
 
 ## 构建和运行
-### 前端
+### 构建
 
 ```bash
-npm build
+npm install
 ```
 
-### 服务端
+### 运行
 
 ```bash
+# 指定环境变量
+export NODE_ENV="development"
+export MONGODB_CONNECTION="localhost:27017/nthskeys" # MongoDB 的路径、端口和 collection
+export FILE_PATH="/var/data/nthskeys" # 压缩包、解压文档和访问日志目录
+
+# 运行服务器
 node server.js
 ```
 

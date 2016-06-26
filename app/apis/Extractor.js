@@ -11,13 +11,13 @@ var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = funct
         throw new Error('雷锋可是没有奖励的哟！请输入贡献者。');
     }
     
-    var dfd = jQuery.Deferred();
-    var xhr = new XMLHttpRequest();
+    let dfd = jQuery.Deferred();
+    let xhr = new XMLHttpRequest();
     
-    var processResponse = function() {
+    let processResponse = function() {
         outputCallback(xhr);
     }
-    var stateChange = function() {
+    let stateChange = function() {
         if (xhr.readyState === 4) {
             if (xhr.status >= 400 && xhr.status < 600) {
                 dfd.reject(JSON.parse(xhr.responseText));
@@ -26,7 +26,7 @@ var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = funct
             }
         }
     }
-    var processError = function() {
+    let processError = function() {
         dfd.reject({ message: '网络错误。' });
     }
     

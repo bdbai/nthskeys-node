@@ -56,5 +56,5 @@ var ret = Promise.promisify(mongoose.connection.once, { context: mongoose.connec
     return setSchema();
 });
 
-mongoose.connect('mongodb://' + process.env.MONGODB_CONNECTION);
+mongoose.connect(process.env.MONGO_PORT_27017_TCP.replace('tcp://', 'mongodb://') + '/nthskeys');
 module.exports = { prepare: ret };
