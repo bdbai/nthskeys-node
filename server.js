@@ -40,7 +40,7 @@ app.use('/download', express.static(
 if (process.env.NODE_ENV === 'development') {
     console.log('CORS enabled.');
     app.use(require('express-cors')({
-        allowedOrigins: [ 'localhost:8080' ]
+        allowedOrigins: [ 'localhost:8080', 'dd.bdbaifr1.ml:9005' ]
     }));
 }
 
@@ -111,6 +111,7 @@ apiRouter.route('/release').post(function(req, res) {
         res.end('读取压缩包信息时出错。');
     }).then(function() {
         archive.status = 'released';
+        archive.password = releasePw;
         archive.released_by = releaseBy;
         archive.released_at = new Date();
         return archive.save();
@@ -147,5 +148,5 @@ setInterval(function() {
 model.prepare.then(function(_models) {
     models = _models;
     crawl(models);
-    app.listen(process.env.PORT || 9004);
+    app.listen(process.env.PORT || 9004, '0.0.0.0');
 });

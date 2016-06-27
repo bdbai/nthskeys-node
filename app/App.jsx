@@ -6,6 +6,8 @@ import HeaderSection from './components/HeaderSection';
 import ArchiveList from './views/ArchiveList';
 import FileList from './views/FileList';
 
+import Styles from './styles/styles.css';
+
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 class App extends React.Component {
@@ -26,7 +28,7 @@ class App extends React.Component {
 var rootInstance = render((
   <Router>
     <Route path="/" component={App}>
-      <IndexRoute component={HeaderSection} />
+      <IndexRoute component={FileList} />
       <Route path="archives" component={ArchiveList} />
       <Route path="files" component={FileList} />
     </Route>

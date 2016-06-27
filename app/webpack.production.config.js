@@ -29,7 +29,13 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'NthsKeys',
             template: 'index.production.ejs',
-            hash: true
+            hash: true,
+            minify: {
+                html5: true,
+                collapseInlineTagWhitespace: true,
+                collapseWhitespace: true,
+                removeComments: true
+            }
         }),
         new webpack.optimize.UglifyJsPlugin({
             mangle: true

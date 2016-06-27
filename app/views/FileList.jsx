@@ -2,18 +2,18 @@ import React from 'React';
 
 import FileModel from '../apis/Files';
 import Loading from '../components/Loading';
-import FileItem from '../components/FileItem';
+import FileDirItem from '../components/FileDirItem';
 
 class FileList extends React.Component {
     constructor(props, context) {
         super(props, context);
         
-        this.state = { loaded: false, files: [] };
+        this.state = { loaded: false, dirs: {} };
     }
     componentDidMount() {
         FileModel.getFiles()
-        .then(files => {
-            this.setState({ loaded: true, files: files });
+        .then(dirs => {
+            this.setState({ loaded: true, dirs: dirs });
         }, err => {
             this.setState({ loaded: true });
             alert('Error while loading files.');
@@ -24,8 +24,8 @@ class FileList extends React.Component {
         if (this.state.loaded) {
             return (
                 <div className="list-group">
-                    {this.state.files.map((file, index) => {
-                        return (<FileItem key={index} file={file} />);
+                    {Array.from(this.state.dirs.dirs.values()).map((dir, index) => {
+                        return (<FileDirItem key={index} dir={dir} />);
                     })}
                 </div>
             );

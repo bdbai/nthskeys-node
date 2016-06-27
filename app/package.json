@@ -5,7 +5,7 @@
   "main": "App.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV='development' webpack-dev-server --progress --config webpack.development.config.js --hot --inline",
+    "start": "NODE_ENV='development' webpack-dev-server --host 0.0.0.0 --progress --config webpack.development.config.js --hot --inline",
     "build": "NODE_ENV='production' webpack --config webpack.production.config.js"
   },
   "keywords": [

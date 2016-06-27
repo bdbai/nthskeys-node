@@ -53,6 +53,7 @@ class ArchiveItem extends React.Component {
         let containerClass = 'list-group-item';
         let releaseControl = '';
         let releaseOutput = '';
+        let infoLine = '';
         if (this.props.archive.status === 'unreleased') {
             containerClass += ' list-group-item-info';
             releaseControl = (
@@ -71,6 +72,19 @@ class ArchiveItem extends React.Component {
                         }
                             
                     </form>
+                </div>
+            );
+        } else if (this.props.archive.status === 'released') {
+            infoLine = (
+                <div className="row text-muted">
+                    <div className="col-xs-6">
+                        <span className="glyphicon glyphicon-lock" aria-hidden="true" />
+                        {this.props.archive.password}
+                    </div>
+                    <div className="col-xs-6">
+                        <span className="glyphicon glyphicon-user" aria-hidden="true" />
+                        {this.props.archive.released_by}
+                    </div>
                 </div>
             );
         }
@@ -123,6 +137,7 @@ class ArchiveItem extends React.Component {
                 <div className="list-group-item-heading">
                     {this.props.archive.title}
                 </div>
+                {infoLine}
                 {releaseControl}
                 {releaseOutput}
             </div>
