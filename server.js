@@ -53,8 +53,17 @@ apiRouter.route('/archives').get(function(req, res) {
     });
 });
 apiRouter.route('/files').get(function(req, res) {
-    models.File.find({}).exec().then(function(result) {
-        res.json(result);
+    var queryObj = {};
+    if (typeof req.query.last_update !== 'undefined') {
+        queryObj = {
+            created_at: { $gt: new Date(parseInt(req.query.last_update) - 28800000) }
+        }
+    }
+    models.File.find(queryObj).exec().then(function(result) {
+        res.json({
+            result: result,
+            timetick: new Date().getTime()
+        });
     });
 });
 

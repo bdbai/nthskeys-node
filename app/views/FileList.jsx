@@ -21,17 +21,35 @@ class FileList extends React.Component {
         });
     }
     render() {
-        if (this.state.loaded) {
-            return (
-                <div className="list-group">
-                    {Array.from(this.state.dirs.dirs.values()).map((dir, index) => {
-                        return (<FileDirItem key={index} dir={dir} />);
-                    })}
-                </div>
-            );
-        } else {
+        if (!this.state.loaded) {
             return (<Loading />);
         }
+        return (
+            <div>
+                <section className="panel panel-primary">
+                    <div className="panel-heading">
+                        最近更新
+                    </div>
+                    <div className="panel-body">
+                        <div className="list-group">
+                            {Array.from(this.state.dirs.newDirs.dirs.values()).map((dir, index) => {
+                                return (<FileDirItem key={index} dir={dir} />);
+                            })}
+                        </div>
+                    </div>
+                </section>
+                <section className="panel panel-default">
+                    <div className="panel-heading">
+                        所有文件
+                    </div>
+                    <div className="panel-body">
+                        {Array.from(this.state.dirs.allDirs.dirs.values()).map((dir, index) => {
+                            return (<FileDirItem key={index} dir={dir} />);
+                        })}
+                    </div>
+                </section>
+            </div>
+        )
     }
 }
 
