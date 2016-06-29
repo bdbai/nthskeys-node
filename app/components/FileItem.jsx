@@ -7,9 +7,7 @@ class FileItem extends React.Component {
         super(props, context);
         
         this.state = { isPreviewing: false };
-        this.state.isPic = props.file.path.indexOf('.jpg') !== -1
-                        || props.file.path.indexOf('.png') !== -1
-                        || props.file.path.indexOf('.gif') !== -1;
+        this.state.isPic = props.file.path.match(/\.(jpg|png|gif)/i);
         this.state.fileUrl = `${config.downloadPrefix}/${props.file.grade_category}/${props.file.subject_category}/${props.file.path}`;
     }
     fileClick(e) {

@@ -61,6 +61,12 @@ class Files {
             return dfd.promise();
         });
     }
+    static getFilesByArchive(archiveId) {
+        return jQuery.ajax({
+            url: `${config.apiPrefix}/filesbyarchive`,
+            data: { archive_id: archiveId }
+        });
+    }
 }
 
 export default Files;

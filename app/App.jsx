@@ -5,6 +5,7 @@ import { Router, Route, IndexRoute } from 'ReactRouter';
 import HeaderSection from './components/HeaderSection';
 import ArchiveList from './views/ArchiveList';
 import FileList from './views/FileList';
+import StatisticView from './views/StatisticView';
 
 import Styles from './styles/styles.css';
 
@@ -31,6 +32,7 @@ var rootInstance = render((
       <IndexRoute component={FileList} />
       <Route path="archives" component={ArchiveList} />
       <Route path="files" component={FileList} />
+      <Route path="statistic" component={StatisticView} />
     </Route>
   </Router>
 ), document.getElementById('app-frame'));

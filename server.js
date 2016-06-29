@@ -66,6 +66,22 @@ apiRouter.route('/files').get(function(req, res) {
         });
     });
 });
+apiRouter.route('/filesbyarchive').get(function(req, res) {
+    models.File.find({ 'archive': ObjectId(req.query.archive_id) })
+    .exec().then(function(result) {
+        res.json(result);
+    });
+});
+apiRouter.route('/rank').get(function(req, res) {
+    models.Archive.aggregate([
+        { $match: { status: "released" } },
+        { $group: { _id: "$released_by", count: { $sum: 1 } } },
+        { $sort: { count: -1 } }
+    ])
+    .exec().then(function(result) {
+        res.json(result);
+    });
+});
 
 global.archiveReleasing = false;
 // Archive release

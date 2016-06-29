@@ -1,3 +1,18 @@
+.navbar-header {
+    float: left;
+    margin: 0;
+}
+.navbar .navbar-nav {
+    margin: 0;
+}
+.navbar li {
+    float: left;
+    height: 50px;
+}
+.navbar li > a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
 .well {
     word-break: break-all;
 }
@@ -12,4 +27,41 @@
     margin-top: 10px;
     margin-left: 10px;
     border-left: solid #888888 2px;
+}
+.archive-preview-con {
+    margin-top: 10px;
+}
+.preview-link {
+    cursor: pointer;
+}
+@keyframes loading {
+    from {
+        left: 0;
+    }
+    to {
+        left: 100%;
+    }
+}
+.loading-span {
+    position: relative;
+    animation: loading 3s cubic-bezier(0,0.5,1,0.5) alternate infinite;
+}
+.tran-enter {
+    opacity: 0;
+    margin-top: -15px;
+    transition: margin-top .25s ease-out .25s,
+                opacity .25s ease-out .25s;
+}
+.tran-enter.tran-enter-active {
+    margin-top: 10px;
+    opacity: 1;
+}
+.tran-leave {
+    opacity: 1;
+    transition: margin-top .25s ease-in,
+                opacity .25s ease-in;
+}
+.tran-leave.tran-leave-active {
+    margin-top: -15px;
+    opacity: 0;
 }

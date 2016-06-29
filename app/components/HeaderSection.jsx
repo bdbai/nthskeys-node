@@ -17,6 +17,9 @@ export default class HeaderSection extends React.Component {
                             <li>
                                 <Link to="/archives">压缩包</Link>
                             </li>
+                            <li>
+                                <Link to="/statistic">统计</Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

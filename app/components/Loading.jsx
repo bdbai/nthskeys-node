@@ -2,7 +2,13 @@ import React from 'React';
 
 class Loading extends React.Component {
     render() {
-        return (<small>Loading...</small>);
+        return (
+            <div className="loading-con">
+                <span className="loading-span">
+                    ······
+                </span>
+            </div>
+        );
     }
 }
 

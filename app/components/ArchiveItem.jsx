@@ -1,7 +1,11 @@
 import React from 'React';
 
 import Loading from './Loading';
+import FileItem from './FileItem';
+import Files from '../apis/Files';
 import Extractor from '../apis/Extractor';
+
+const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 class ArchiveItem extends React.Component {
     constructor(props, context) {
@@ -11,13 +15,35 @@ class ArchiveItem extends React.Component {
         this.state = {
             releaseState: 'not running',
             releaseOutput: '',
-            errorText: ''
+            errorText: '',
+            loadingFilelist: false,
+            loadedFileList: false,
+            displayFileList: true,
+            files: []
         };
     }
     componentDidUpdate() {
         if (typeof this.refs.outputWell !== 'undefined') {
             this.refs.outputWell.innerText = this.state.releaseOutput;
         }
+    }
+    loadFileList(e) {
+        e.preventDefault();
+        if (this.state.loadedFileList) {
+            this.setState({ displayFileList: !this.state.displayFileList });
+            return;
+        }
+        this.setState({ loadingFilelist: true });
+        Files.getFilesByArchive(this.props.archive._id)
+        .then(files => {
+            this.setState({
+                loadedFileList: true,
+                loadingFilelist: false,
+                files: files
+            });
+        }, () => {
+            this.setState({ loadingFilelist: false });
+        });
     }
     submitRelease(e) {
         e.preventDefault();
@@ -50,10 +76,11 @@ class ArchiveItem extends React.Component {
         
     }
     render() {
-        let containerClass = 'list-group-item';
+        let containerClass = 'archive-item list-group-item';
         let releaseControl = '';
         let releaseOutput = '';
         let infoLine = '';
+        let filesPreview = '';
         if (this.props.archive.status === 'unreleased') {
             containerClass += ' list-group-item-info';
             releaseControl = (
@@ -87,6 +114,15 @@ class ArchiveItem extends React.Component {
                     </div>
                 </div>
             );
+            if (this.state.displayFileList && this.state.loadedFileList) {
+                filesPreview = (
+                    <div key="dummy" className="list-group archive-preview-con">
+                        {this.state.files.map((file, index) => {
+                            return (<FileItem file={file} key={index} />);
+                        })}
+                    </div>
+                );
+            }
         }
         switch (this.state.releaseState) {
             case 'running':
@@ -136,10 +172,22 @@ class ArchiveItem extends React.Component {
             <div className={containerClass}>
                 <div className="list-group-item-heading">
                     {this.props.archive.title}
+                    {
+                        this.props.archive.status === 'released' ?
+                        <div onClick={this.loadFileList.bind(this)} className="preview-link pull-right text-muted">
+                            <span className="glyphicon glyphicon-list" aria-hidden="true"></span>
+                            &nbsp;预览内容
+                        </div>
+                        : ''
+                    }
                 </div>
+                {this.state.loadingFilelist ? <Loading /> : ''}
                 {infoLine}
                 {releaseControl}
                 {releaseOutput}
+                <ReactCSSTransitionGroup transitionName="tran" transitionEnterTimeout={500} transitionLeaveTimeout={250}>
+                	{filesPreview}
+                </ReactCSSTransitionGroup>
             </div>
         );
     }

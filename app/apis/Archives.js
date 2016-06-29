@@ -6,6 +6,7 @@ class Archives {
     static getArchives() {
         return jQuery.ajax({
             url: `${config.apiPrefix}/archives`,
+            cache: false,
             dataType: 'json'
         });
     }
