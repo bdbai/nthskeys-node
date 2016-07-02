@@ -19,7 +19,9 @@ NthsKeys 作业答案计划 - Node ver.
 export NODE_ENV="development"
 export BDTJ_ID="909044fbc84468a4ab64fc9544d428ea" # 百度统计的独立 ID
 
-# 打包并启动热调试服务器
+# 安装依赖，打包并启动热调试服务器
+npm install -g webpack # Linux 和 macOS 需要 `sudo`
+npm run-script build
 cd ./app
 npm start
 ```

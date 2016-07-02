@@ -16,7 +16,7 @@
             ],
             "env": {
                 "NODE_ENV": "development",
-                "MONGO_PORT_27017_TCP": "tcp://localhost:27017",
+                "MONGODB_CONNECTION": "localhost:27017/nthskeys",
                 "FILE_PATH": "/home/bdbai/node/nthskeys/files"
             },
             "externalConsole": false,
@@ -37,7 +37,7 @@
             ],
             "env": {
                 "NODE_ENV": "development",
-                "MONGO_PORT_27017_TCP": "tcp://localhost:27017",
+                "MONGODB_CONNECTION": "localhost:27017/nthskeys",
                 "FILE_PATH": "/home/bdbai/node/nthskeys/files"
             },
             "externalConsole": false,
