@@ -28,8 +28,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'NthsKeys',
             template: 'index.development.ejs',
-            hash: true
+            hash: true,
+            BDTJ_ID: process.env.BDTJ_ID
         }),
-        new webpack.EnvironmentPlugin(["NODE_ENV"])
+        new webpack.EnvironmentPlugin(["NODE_ENV", "BDTJ_ID"])
     ]
 };

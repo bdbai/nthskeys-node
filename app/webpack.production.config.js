@@ -35,11 +35,12 @@ module.exports = {
                 collapseInlineTagWhitespace: true,
                 collapseWhitespace: true,
                 removeComments: true
-            }
+            },
+            BDTJ_ID: process.env.BDTJ_ID
         }),
         new webpack.optimize.UglifyJsPlugin({
             mangle: true
         }),
-        new webpack.EnvironmentPlugin(["NODE_ENV"])
+        new webpack.EnvironmentPlugin(["NODE_ENV", "BDTJ_ID"])
     ]
 };

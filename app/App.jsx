@@ -2,6 +2,8 @@ import React from 'React';
 import { render } from 'ReactDOM';
 import { Router, Route, IndexRoute } from 'ReactRouter';
 
+import { PageView } from './apis/BdTongji';
+
 import HeaderSection from './components/HeaderSection';
 import ArchiveList from './views/ArchiveList';
 import FileList from './views/FileList';
@@ -26,9 +28,13 @@ class App extends React.Component {
     }
 }
 
+function onRouterChange(prevState, nextState) {
+    PageView(nextState.location.pathname);
+}
+
 var rootInstance = render((
   <Router>
-    <Route path="/" component={App}>
+    <Route path="/" component={App} onChange={onRouterChange}>
       <IndexRoute component={FileList} />
       <Route path="archives" component={ArchiveList} />
       <Route path="files" component={FileList} />
@@ -37,7 +43,7 @@ var rootInstance = render((
   </Router>
 ), document.getElementById('app-frame'));
 
-if (module.hot) {
+if (process.env.NODE_ENV === 'development' && module.hot) {
   require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
     getRootInstances: function () {
       return [rootInstance];

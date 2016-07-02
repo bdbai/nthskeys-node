@@ -131,7 +131,7 @@ module.exports = function(_model) {
         // Load crawler info...
         promiseSharedScope.models.Crawler.findOne({}).exec(),
         // ... and crawl parallelly.
-        getMainPage(3),
+        getMainPage(1),
     ]).bind(promiseSharedScope).spread(function(crawler, page) {
         // Find out new entries.
         var newEntries = [];
