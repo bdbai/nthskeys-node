@@ -55,6 +55,7 @@ class ArchiveItem extends React.Component {
         e.preventDefault();
         try {
             this.wrongPassword = false;
+            this.moreError = false;
             Extractor(
                 this.props.archive._id,
                 this.refs.passTxt.value,
@@ -63,12 +64,17 @@ class ArchiveItem extends React.Component {
                     if (xhr.responseText.indexOf('Wrong password?') !== -1) {
                         this.wrongPassword = true;
                     }
+                    if (xhr.responseText.indexOf('解压时出错了。') !== -1) {
+                        this.moreError = true;
+                    }
                     this.setState({ releaseOutput: xhr.responseText });
                 }
             )
             .then(() => {
                 if (this.wrongPassword) {
                     this.setState({ releaseState: 'error', errorText: '密码错了哟~' });
+                } else if (this.moreError) {
+                    this.setState({ releaseState: 'error', errorText: '诡异的错误发生了！' });
                 } else {
                     this.loadFileList();
                     this.setState({ releaseState: 'success' });
