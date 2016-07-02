@@ -27,8 +27,10 @@ class ArchiveItem extends React.Component {
             this.refs.outputWell.innerText = this.state.releaseOutput;
         }
     }
-    loadFileList(e) {
-        e.preventDefault();
+    loadFileList() {
+        if (this.state.loadingFilelist) {
+            return;
+        }
         if (this.state.loadedFileList) {
             this.setState({ displayFileList: !this.state.displayFileList });
             return;
@@ -44,6 +46,10 @@ class ArchiveItem extends React.Component {
         }, () => {
             this.setState({ loadingFilelist: false });
         });
+    }
+    previewBtnClick(e) {
+        e.preventDefault();
+        this.loadFileList();
     }
     submitRelease(e) {
         e.preventDefault();
@@ -64,6 +70,7 @@ class ArchiveItem extends React.Component {
                 if (this.wrongPassword) {
                     this.setState({ releaseState: 'error', errorText: '密码错了哟~' });
                 } else {
+                    this.loadFileList();
                     this.setState({ releaseState: 'success' });
                 }
             }, (err) => {
@@ -81,48 +88,52 @@ class ArchiveItem extends React.Component {
         let releaseOutput = '';
         let infoLine = '';
         let filesPreview = '';
-        if (this.props.archive.status === 'unreleased') {
-            containerClass += ' list-group-item-info';
-            releaseControl = (
-                <div>
-                    <form className="form-inline">
-                        <div className="form-group">
-                            <input type="text" ref="passTxt" maxLength="16" className="form-control" placeholder="密码" />
-                        </div>
-                        <div class="form-group">
-                            <input type="text" ref="nameTxt" maxLength="10" className="form-control" placeholder="贡献者" />
-                        </div>
-                        {this.state.releaseState === 'running' || this.state.releaseState === 'success' ?
-                            (<button type="submit" disabled="disabled" className="btn btn-default">提交！</button>)
-                            :
-                            (<button onClick={this.submitRelease.bind(this)} type="submit" className="btn btn-default">提交！</button>)
-                        }
-                            
-                    </form>
+
+        if (this.state.displayFileList && this.state.loadedFileList) {
+            filesPreview = (
+                <div key="dummy" className="list-group archive-preview-con">
+                    {this.state.files.map((file, index) => {
+                        return (<FileItem file={file} key={index} />);
+                    })}
                 </div>
             );
-        } else if (this.props.archive.status === 'released') {
-            infoLine = (
-                <div className="row text-muted">
-                    <div className="col-xs-6">
-                        <span className="glyphicon glyphicon-lock" aria-hidden="true" />
-                        {this.props.archive.password}
-                    </div>
-                    <div className="col-xs-6">
-                        <span className="glyphicon glyphicon-user" aria-hidden="true" />
-                        {this.props.archive.released_by}
-                    </div>
-                </div>
-            );
-            if (this.state.displayFileList && this.state.loadedFileList) {
-                filesPreview = (
-                    <div key="dummy" className="list-group archive-preview-con">
-                        {this.state.files.map((file, index) => {
-                            return (<FileItem file={file} key={index} />);
-                        })}
+        }
+        switch (this.props.archive.status) {
+            case 'unreleased' :
+                containerClass += ' list-group-item-info';
+                releaseControl = (
+                    <div>
+                        <form className="form-inline">
+                            <div className="form-group">
+                                <input type="text" ref="passTxt" maxLength="16" className="form-control" placeholder="密码" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" ref="nameTxt" maxLength="10" className="form-control" placeholder="贡献者" />
+                            </div>
+                            {this.state.releaseState === 'running' || this.state.releaseState === 'success' ?
+                                (<button type="submit" disabled="disabled" className="btn btn-default">提交！</button>)
+                                :
+                                (<button onClick={this.submitRelease.bind(this)} type="submit" className="btn btn-default">提交！</button>)
+                            }
+
+                        </form>
                     </div>
                 );
-            }
+                break;
+            case 'released' :
+                infoLine = (
+                    <div className="row text-muted">
+                        <div className="col-xs-6">
+                            <span className="glyphicon glyphicon-lock" aria-hidden="true" />
+                            {this.props.archive.password}
+                        </div>
+                        <div className="col-xs-6">
+                            <span className="glyphicon glyphicon-user" aria-hidden="true" />
+                            {this.props.archive.released_by}
+                        </div>
+                    </div>
+                );
+                break;
         }
         switch (this.state.releaseState) {
             case 'running':
@@ -174,20 +185,24 @@ class ArchiveItem extends React.Component {
                     {this.props.archive.title}
                     {
                         this.props.archive.status === 'released' ?
-                        <div onClick={this.loadFileList.bind(this)} className="preview-link pull-right text-muted">
+                        <button onClick={this.previewBtnClick.bind(this)}
+                                className={(
+                                    this.state.loadingFilelist
+                                    || this.state.loadedFileList && this.state.displayFileList
+                                    ? 'active ' : '') + 'btn btn-default preview-link pull-right text-muted'}>
                             <span className="glyphicon glyphicon-list" aria-hidden="true"></span>
                             &nbsp;预览内容
-                        </div>
+                        </button>
                         : ''
                     }
                 </div>
                 {this.state.loadingFilelist ? <Loading /> : ''}
                 {infoLine}
                 {releaseControl}
-                {releaseOutput}
                 <ReactCSSTransitionGroup transitionName="tran" transitionEnterTimeout={500} transitionLeaveTimeout={250}>
                 	{filesPreview}
                 </ReactCSSTransitionGroup>
+                {releaseOutput}
             </div>
         );
     }

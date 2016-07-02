@@ -143,7 +143,7 @@ module.exports = function(_model) {
         this.latestEntryTime = entries.reduce(function(prev,curr) {
             if (curr.time > lastEntryTime &&
                 typeof curr.title !== 'undefined' && // remove highlighted entries
-                curr.title.indexOf('寒假作业') !== -1) {
+                curr.title.indexOf('暑假作业') !== -1) {
                 newEntries.push(curr);
             }
             return prev > curr.time ? prev : curr.time;

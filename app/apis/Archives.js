@@ -1,14 +1,9 @@
-import jQuery from 'jQuery';
-
-import config from './ApiConfig.js';
+import config from './ApiConfig';
+import { GetAsync } from './request';
 
 class Archives {
     static getArchives() {
-        return jQuery.ajax({
-            url: `${config.apiPrefix}/archives`,
-            cache: false,
-            dataType: 'json'
-        });
+        return GetAsync(`${config.apiPrefix}/archives`);
     }
 }
 

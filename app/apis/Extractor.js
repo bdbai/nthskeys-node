@@ -1,4 +1,4 @@
-import jQuery from 'jQuery';
+import { Promise } from 'ES6Promise';
 
 import config from './ApiConfig'; 
 
@@ -11,37 +11,40 @@ var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = funct
         throw new Error('雷锋可是没有奖励的哟！请输入贡献者。');
     }
     
-    let dfd = jQuery.Deferred();
-    let xhr = new XMLHttpRequest();
-    
-    let processResponse = function() {
-        outputCallback(xhr);
-    }
-    let stateChange = function() {
-        if (xhr.readyState === 4) {
-            if (xhr.status >= 400 && xhr.status < 600) {
-                dfd.reject(JSON.parse(xhr.responseText));
-            } else {
-                dfd.resolve();
+    let dfd = new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+
+        let processResponse = function() {
+            outputCallback(xhr);
+        }
+        let stateChange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status >= 400 && xhr.status < 600) {
+                    reject(JSON.parse(xhr.responseText));
+                } else {
+                    resolve();
+                }
             }
         }
-    }
-    let processError = function() {
-        dfd.reject({ message: '网络错误。' });
-    }
-    
-    xhr.onprogress = processResponse;
-    xhr.onreadystatechange = stateChange;
-    xhr.onerror = processError;
-    xhr.open('POST', `${config.apiPrefix}/release`);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.send(JSON.stringify({
-        archive_id: archiveId,
-        release_pw: releasePw,
-        release_by: releaseBy
-    }));
-    
-    return dfd.promise();
+        let processError = function() {
+            reject({ message: '网络错误。' });
+        }
+
+        xhr.onprogress = processResponse;
+        xhr.onreadystatechange = stateChange;
+        xhr.onerror = processError;
+        xhr.open('POST', `${config.apiPrefix}/release`);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            archive_id: archiveId,
+            release_pw: releasePw,
+            release_by: releaseBy
+        }));
+
+
+    });
+
+    return dfd;
 }
 
 export default Extractor;

@@ -1,14 +1,9 @@
-import jQuery from 'jQuery';
-
 import config from './ApiConfig';
+import { GetAsync } from './request';
 
 class Statistic {
     static getRankList() {
-        return jQuery.ajax({
-            url: `${config.apiPrefix}/rank`,
-            cache: false,
-            dataType: 'json'
-        });
+        return GetAsync(`${config.apiPrefix}/rank`);
     }
 }
 

@@ -56,14 +56,29 @@ apiRouter.route('/files').get(function(req, res) {
     var queryObj = {};
     if (typeof req.query.last_update !== 'undefined') {
         queryObj = {
-            created_at: { $gt: new Date(parseInt(req.query.last_update) - 28800000) }
+            created_at: { $gt: new Date(parseInt(req.query.last_update)) }
         }
     }
     models.File.find(queryObj).exec().then(function(result) {
-        res.json({
-            result: result,
-            timetick: new Date().getTime()
-        });
+        if (!result || result.length === 0) {
+            res.json({
+                result: [],
+                timetick: req.query.last_update
+            });
+        } else if (result.length === 1) {
+            res.json({
+                result: result,
+                timetick: result[0].created_at.getTime()
+            });
+        } else {
+            var latestFile = result.reduce(function(prev, curr) {
+                return curr.created_at > prev.created_at ? curr : prev;
+            });
+            res.json({
+                result: result,
+                timetick: latestFile.created_at.getTime()
+            });
+        }
     });
 });
 apiRouter.route('/filesbyarchive').get(function(req, res) {
@@ -91,17 +106,17 @@ apiRouter.route('/release').post(function(req, res) {
     var releaseBy = req.body.release_by || '';
     // Check validation
     if (!archiveId || !releasePw) {
-        res.status(400);
+        res.sendStatus(400);
         res.json({ message: '输入有误。' });
         return;
     }
     if (!releasePw.match(ARCHIVE_PW_REGEX)) {
-        res.status(400);
+        res.sendStatus(400);
         res.json({ message: '密码格式似乎不对。' });
         return;
     }
     if (global.archiveReleasing) {
-        res.status(503);
+        res.sendStatus(503);
         res.json({ message: '有一个解压任务正在进行。' });
         return;
     }
@@ -111,14 +126,14 @@ apiRouter.route('/release').post(function(req, res) {
     .exec().then(function(archives) {
         if (archives.length !== 1) {
             global.archiveReleasing = false;
-            res.status(404);
+            res.sendStatus(404);
             res.json({ message: '未找到该压缩包。' });
             return;
         }
         archive = archives[0];
         if (archive.status === 'released') {
             global.archiveReleasing = false;
-            res.status(400);
+            res.sendStatus(400);
             res.json({ message: '已解压。' });
             return;
         }

@@ -11,8 +11,7 @@ class FileList extends React.Component {
         this.state = { loaded: false, dirs: {} };
     }
     componentDidMount() {
-        FileModel.getFiles()
-        .then(dirs => {
+        FileModel.getFiles().then(dirs => {
             this.setState({ loaded: true, dirs: dirs });
         }, err => {
             this.setState({ loaded: true });

@@ -20,7 +20,7 @@ module.exports = {
         ]
     },
     externals: {
-        jQuery: true,
+        ES6Promise: true,
         React: true,
         ReactDOM: true,
         ReactRouter: true

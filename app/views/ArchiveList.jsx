@@ -1,5 +1,4 @@
 import React from 'React';
-import jQuery from 'jQuery';
 
 import ArchiveModel from '../apis/Archives';
 import Loading from '../components/Loading';
