@@ -47,6 +47,7 @@ function processFile(filePath, fileSize, outerCategory, innerCategory) {
         archive:          _archive,
         subject_category: innerCategory,
         grade_category:   outerCategory,
+        created_at:       new Date()
     });
     return fileModel.save().then(function() {
         logLine('File saved: ' + filePath);
@@ -145,7 +146,7 @@ function extract(archivePath, password) {
             logLine(str);
         });
         extractProcess.on('close', function(code) {
-            if (code === 0) {
+            if (code < 2) {
                 resolve();
             } else {
                 fs.removeSync(tmpDest);

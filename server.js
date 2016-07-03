@@ -47,12 +47,17 @@ if (process.env.NODE_ENV === 'development') {
 var models = {};
 
 var apiRouter = express.Router();
+apiRouter.use(function(req, res, next) {
+    res.setHeader('Cache-Control', 'must-revalidate, max-age=15');
+    next();
+});
 apiRouter.route('/archives').get(function(req, res) {
     models.Archive.find({}).exec().then(function(result) {
         res.json(result);
     });
 });
 apiRouter.route('/files').get(function(req, res) {
+    res.setHeader('Cache-Control', 'no-cache, max-age=0');
     var queryObj = {};
     if (typeof req.query.last_update !== 'undefined') {
         queryObj = {
@@ -157,6 +162,7 @@ apiRouter.route('/release').post(function(req, res) {
         return archive.save();
     }, function(err) {
         global.archiveReleasing = false;
+        res.write(err.message);
         if (err.message === 'Wrong password.') {
             res.end('密码有误。');
         } else {

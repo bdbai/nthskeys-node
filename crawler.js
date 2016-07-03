@@ -163,7 +163,8 @@ module.exports = function(_model) {
                 archive_url:   attachment.archive_url,
                 page_url:      attachment.page_url,
                 size:          fs.statSync(fileName).size,
-                category:      attachment.category
+                category:      attachment.category,
+                created_at:    new Date()
             });
             logLine('Saving archive: ' + archive.title);
             return archive.save();

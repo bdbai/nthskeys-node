@@ -17,7 +17,7 @@ function setSchema() {
         released_by: String,
         released_at: Date,
         password:    String,
-        created_at:  { type: Date, index: true, default: Date.now }
+        created_at:  { type: Date, index: true }
     });
     var archiveModel = mongoose.model('archive', archiveSchema);
 
@@ -29,7 +29,7 @@ function setSchema() {
         click:            { type: Number, default: 0 },
         subject_category: { type: String, index: true },
         grade_category:   { type: String, index: true },
-        created_at:       { type: Date, index: true, default: Date.now() }
+        created_at:       { type: Date, index: true }
     });
     var fileModel = mongoose.model('file', fileSchema);
 
