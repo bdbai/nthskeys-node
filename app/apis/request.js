@@ -29,4 +29,37 @@ export function GetAsync(url) {
     return p;
 }
 
-export default { GetAsync };
+export function GetOfflineAsync(url, valueKey) {
+    return new Promise((resolve, reject) => {
+        GetAsync(url)
+        .then(result => {
+            try {
+                window.localStorage.setItem(valueKey, JSON.stringify(result));
+            } catch (ex) { }
+            resolve(result);
+        }, err => {
+            try {
+                let result = window.localStorage.getItem(valueKey);
+                if (typeof result !== 'undefined' && result !== null) {
+                    OfflineConfirm();
+                    resolve(JSON.parse(result));
+                } else {
+                    reject(err);
+                }
+            } catch (ex) {
+                reject('Error while reading localStorage.');
+            }
+        });
+    });
+}
+
+export function OfflineConfirm() {
+    try {
+        if (!window.localStorage.getItem('offlineConfirm') && confirm('离线模式。已经预览过的图片依然可用。\r\n不再提醒？')) {
+            window.localStorage.setItem('offlineConfirm', true);
+        }
+        window.title += ' - 离线模式';
+    } catch (ex) { }
+}
+
+export default { GetAsync, GetOfflineAsync, OfflineConfirm };

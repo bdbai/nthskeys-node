@@ -9,6 +9,7 @@ var morgan = require('morgan');
 var model = require('./model');
 var crawler = require('./crawler');
 var extractor = require('./extractor');
+var version = require('./static/version.json');
 
 const ARCHIVE_PW_REGEX = /^szsz+\w{12}$/;
 const ACCESS_LOG_PATH = path.join(process.env.FILE_PATH, 'log', 'access.log');
@@ -40,7 +41,7 @@ app.use('/download', express.static(
 if (process.env.NODE_ENV === 'development') {
     console.log('CORS enabled.');
     app.use(require('express-cors')({
-        allowedOrigins: [ 'localhost:8080', 'dd.bdbaifr1.ml:9005' ]
+        allowedOrigins: [ '192.168.1.100:8080', 'dd.bdbaifr1.ml:9005' ]
     }));
 }
 
@@ -50,6 +51,9 @@ var apiRouter = express.Router();
 apiRouter.use(function(req, res, next) {
     res.setHeader('Cache-Control', 'must-revalidate, max-age=15');
     next();
+});
+apiRouter.route('/version').get(function(req, res) {
+    res.json(version);
 });
 apiRouter.route('/archives').get(function(req, res) {
     models.Archive.find({}).exec().then(function(result) {
@@ -178,8 +182,9 @@ apiRouter.route('/release').post(function(req, res) {
 });
 app.use('/api', apiRouter);
 app.get('/', function(req, res) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
     res.sendFile(path.join(__dirname, 'static', 'index.html'));
-})
+});
 
 function crawl() {
     crawler(models).catch(function(err) {

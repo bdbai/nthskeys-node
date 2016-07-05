@@ -1,6 +1,6 @@
 {
   "name": "nthskeys-web",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "NthsKeys web front.",
   "main": "App.jsx",
   "scripts": {
@@ -26,5 +26,8 @@
     "react-hot-loader": "^1.3.0",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.1"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^3.0.1"
   }
 }

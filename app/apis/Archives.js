@@ -1,9 +1,9 @@
 import config from './ApiConfig';
-import { GetAsync } from './request';
+import { GetOfflineAsync } from './request';
 
 class Archives {
     static getArchives() {
-        return GetAsync(`${config.apiPrefix}/archives`);
+        return GetOfflineAsync(`${config.apiPrefix}/archives`, 'archives');
     }
 }
 

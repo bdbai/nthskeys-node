@@ -17,6 +17,7 @@ class StatisticView extends React.Component {
             this.setState({ loading: false, rank: data });
         }, () => {
             this.setState({ loading: false });
+            alert('Error while loading rank list.');
         });
     }
     render() {

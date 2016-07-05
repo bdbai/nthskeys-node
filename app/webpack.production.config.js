@@ -1,5 +1,7 @@
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HashOutputPlugin = require('./HashOutputPlugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var webpack = require('webpack');
 
 module.exports = {
@@ -41,6 +43,12 @@ module.exports = {
         new webpack.optimize.UglifyJsPlugin({
             mangle: true
         }),
-        new webpack.EnvironmentPlugin(["NODE_ENV", "BDTJ_ID"])
+        new webpack.EnvironmentPlugin(["NODE_ENV", "BDTJ_ID"]),
+        new HashOutputPlugin(path.join(__dirname, '../static', 'version.json')),
+        new CopyWebpackPlugin([
+            {
+                'from': './assets/logo.png'
+            }
+        ])
     ]
 };

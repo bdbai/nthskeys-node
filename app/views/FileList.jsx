@@ -12,8 +12,11 @@ class FileList extends React.Component {
     }
     componentDidMount() {
         FileModel.getFiles().then(dirs => {
+            if (typeof dirs === 'undefined') {
+                throw new Error('Unknow error.');
+            }
             this.setState({ loaded: true, dirs: dirs });
-        }, err => {
+        }).catch(err => {
             this.setState({ loaded: true });
             alert('Error while loading files.');
             console.log(err);
@@ -23,8 +26,16 @@ class FileList extends React.Component {
         if (!this.state.loaded) {
             return (<Loading />);
         }
-        return (
-            <div>
+        if (typeof this.state.dirs === 'undefined' || typeof this.state.dirs.allDirs === 'undefined') {
+            return (
+                <div className="alert alert-danger">
+                    <strong>加载失败了哟。</strong>
+                </div>
+            );
+        }
+        let recentView = '';
+        if (this.state.dirs.newDirs !== null) {
+            recentView = (
                 <section className="panel panel-primary">
                     <div className="panel-heading">
                         最近更新
@@ -37,6 +48,11 @@ class FileList extends React.Component {
                         </div>
                     </div>
                 </section>
+            );
+        }
+        return (
+            <div>
+                {recentView}
                 <section className="panel panel-default">
                     <div className="panel-heading">
                         所有文件

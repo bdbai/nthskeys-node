@@ -1,7 +1,7 @@
 let serverHost = '';
 let config = {};
 if (process.env.NODE_ENV === 'development') {
-    serverHost = 'http://localhost:9004';
+    serverHost = 'http://192.168.1.100:9004';
 }
 
 config = {

@@ -1,5 +1,8 @@
+var fs = require('fs');
 var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HashOutputPlugin = require('./HashOutputPlugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var webpack = require('webpack');
 
 module.exports = {
@@ -31,6 +34,12 @@ module.exports = {
             hash: true,
             BDTJ_ID: process.env.BDTJ_ID
         }),
-        new webpack.EnvironmentPlugin(["NODE_ENV", "BDTJ_ID"])
+        new webpack.EnvironmentPlugin(["NODE_ENV", "BDTJ_ID"]),
+        new HashOutputPlugin(path.join(__dirname, '../static', 'version.json')),
+        new CopyWebpackPlugin([
+            {
+                'from': './assets/logo.png'
+            }
+        ])
     ]
 };

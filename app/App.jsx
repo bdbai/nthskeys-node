@@ -3,6 +3,7 @@ import { render } from 'ReactDOM';
 import { Router, Route, IndexRoute } from 'ReactRouter';
 
 import { PageView } from './apis/BdTongji';
+import UpdateVersion from './apis/Version';
 
 import HeaderSection from './components/HeaderSection';
 import ArchiveList from './views/ArchiveList';
@@ -12,6 +13,10 @@ import StatisticView from './views/StatisticView';
 import Styles from './styles/styles.css';
 
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+try {
+    UpdateVersion();
+} catch (ex) { }
 
 class App extends React.Component {
     render() {

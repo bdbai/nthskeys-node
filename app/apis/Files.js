@@ -1,7 +1,7 @@
 import { Promise } from 'ES6Promise';
 
 import config from './ApiConfig';
-import { GetAsync } from './request';
+import { GetAsync, GetOfflineAsync, OfflineConfirm } from './request';
 
 class Files {
     static hierarchify(files) {
@@ -31,15 +31,17 @@ class Files {
             localFiles = JSON.parse(window.localStorage.getItem('file')) || localFiles;
         } catch (ex) { }
         let dfd = new Promise((resolve, reject) => {
+            let newDirs = null;
             GetAsync(`${config.apiPrefix}/files?last_update=${localFiles.lastUpdate}`)
             .then(apiResult => {
                 let data = apiResult.result;
-                let newDirs;
                 if (data && data.length > 0) {
+                    if (localFiles.files.length > 0) {
+                        newDirs = this.hierarchify(data);
+                        localFiles.newFiles = data;
+                    }
                     localFiles.files.push(...data);
-                    newDirs = this.hierarchify(data);
-                    localFiles.newFiles = data;
-                } else {
+                } else if (localFiles.newFiles.length !== 0) {
                     newDirs = this.hierarchify(localFiles.newFiles);
                 }
                 try {
@@ -58,15 +60,14 @@ class Files {
                 });
             }, () => {
                 if (localFiles.files.length > 0) {
+                    if (localFiles.newFiles.length > 0) {
+                        newDirs = this.hierarchify(localFiles.newFiles);
+                    }
                     let ret = {
-                        'newDirs': this.hierarchify(localFiles.newFiles),
+                        'newDirs': newDirs,
                         'allDirs': this.hierarchify(localFiles.files)
                     }
-                    try {
-                        if (!window.localStorage.getItem('offlineConfirm') && confirm('离线模式。已经缓存过的文件依然可用。\r\n不再提醒？')) {
-                            window.localStorage.setItem('offlineConfirm', true);
-                        }
-                    } catch (ex) { }
+                    OfflineConfirm();
                     resolve(ret);
                 } else {
                     reject('Error while loading files.');
@@ -77,7 +78,7 @@ class Files {
         return dfd;
     }
     static getFilesByArchive(archiveId) {
-        return GetAsync(`${config.apiPrefix}/filesbyarchive?archive_id=${archiveId}`);
+        return GetOfflineAsync(`${config.apiPrefix}/filesbyarchive?archive_id=${archiveId}`, `archive_${archiveId}`);
     }
 }
 
