@@ -1,6 +1,7 @@
 import React from 'React';
 
 import config from '../apis/ApiConfig';
+import PreviewItem from './PreviewItem';
 
 class FileItem extends React.Component {
     constructor(props, context) {
@@ -25,7 +26,7 @@ class FileItem extends React.Component {
                 <div>
                     {this.props.file.path}
                     {this.state.isPreviewing ? 
-                        (<img className="img-responsive" alt="预览" src={this.state.fileUrl} />) : ''
+                        (<PreviewItem file={this.props.file} />) : ''
                     }
                 </div>
             </a>

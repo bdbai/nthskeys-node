@@ -48,6 +48,9 @@ module.exports = {
         new CopyWebpackPlugin([
             {
                 'from': './assets/logo.png'
+            },
+            {
+                'from': './assets/cache.manifest'
             }
         ])
     ]

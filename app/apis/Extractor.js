@@ -19,7 +19,7 @@ var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = funct
         }
         let stateChange = function() {
             if (xhr.readyState === 4) {
-                if (xhr.status >= 400 && xhr.status < 600) {
+                if (xhr.status === 0 || xhr.status >= 400 && xhr.status < 600) {
                     reject(JSON.parse(xhr.responseText));
                 } else {
                     resolve();
@@ -33,13 +33,17 @@ var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = funct
         xhr.onprogress = processResponse;
         xhr.onreadystatechange = stateChange;
         xhr.onerror = processError;
-        xhr.open('POST', `${config.apiPrefix}/release`);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({
-            archive_id: archiveId,
-            release_pw: releasePw,
-            release_by: releaseBy
-        }));
+        try {
+            xhr.open('POST', `${config.apiPrefix}/release`);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+                archive_id: archiveId,
+                release_pw: releasePw,
+                release_by: releaseBy
+            }));
+        } catch (ex) {
+            reject(ex);
+        }
 
 
     });

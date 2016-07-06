@@ -27,16 +27,32 @@ app.use(morgan('combined', {stream: accessLogStream}));
 // Define static source static m.w. .
 app.use('/static', express.static('static',
     {
-        maxAge: 31536000000
+        maxAge: 31536000
     })
 );
 // Define extracted file static m.w..
 app.use('/download', express.static(
     path.join(process.env.FILE_PATH, 'file'),
     {
-        maxAge: 31536000000
+        maxAge: 31536000
     })
 );
+
+app.get('/preview/:filePath', function(req, res) {
+    var filePath = req.params.filePath;
+    res.send(
+        `<html manifest="/preview_manifest/${encodeURIComponent(filePath)}">
+        <head><title>Untitled</title><body>
+        <img alt="preview" src="/download/${filePath}" />
+        </body></html>`
+    );
+});
+app.get('/preview_manifest/:filePath', function(req, res) {
+    res.setHeader('Content-Type', 'text/cache-manifest');
+    res.send(`CACHE MANIFEST
+CACHE
+/download/${encodeURI(req.params.filePath)}`);
+});
 
 if (process.env.NODE_ENV === 'development') {
     console.log('CORS enabled.');

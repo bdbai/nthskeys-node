@@ -6,7 +6,7 @@ export function GetAsync(url) {
 
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
-                if (xhr.status >= 200 && xhr.status < 400) {
+                if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 400) {
                     let result = JSON.parse(xhr.responseText);
                     resolve(result);
                 } else {

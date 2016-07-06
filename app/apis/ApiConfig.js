@@ -6,7 +6,8 @@ if (process.env.NODE_ENV === 'development') {
 
 config = {
     'apiPrefix': `${serverHost}/api`,
-    'downloadPrefix': `${serverHost}/download`
+    'downloadPrefix': `${serverHost}/download`,
+    'previewPrefix': `${serverHost}/preview`
 };
 
 export default config;

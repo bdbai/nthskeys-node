@@ -1,0 +1,18 @@
+CACHE MANIFEST
+
+CACHE:
+/static/bundle.js
+//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css
+//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap-theme.min.css
+//cdn.bootcss.com/react/15.1.0/react-with-addons.min.js
+//cdn.bootcss.com/react/15.1.0/react-dom.min.js
+//cdn.bootcss.com/react-router/2.4.1/ReactRouter.min.js
+//cdn.bootcss.com/es6-promise/3.2.2/es6-promise.min.js
+
+NETWORK:
+/api/version
+/api/files
+/api/archives
+/api/filesbyarchive
+/api/rank
+*
