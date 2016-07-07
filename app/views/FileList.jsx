@@ -11,6 +11,11 @@ class FileList extends React.Component {
         this.state = { loaded: false, dirs: {} };
     }
     componentDidMount() {
+        if (typeof Map === 'undefined') {
+            alert('您的浏览器比较陈旧，我们无法加载文件列表。\r\n请使用"压缩包"一栏来浏览存档和文件，或考虑使用较新的浏览器。');
+            this.props.history.push({ pathname: '/archives' });
+            return;
+        }
         FileModel.getFiles().then(dirs => {
             if (typeof dirs === 'undefined') {
                 throw new Error('Unknow error.');
