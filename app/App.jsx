@@ -9,6 +9,7 @@ import HeaderSection from './components/HeaderSection';
 import ArchiveList from './views/ArchiveList';
 import FileList from './views/FileList';
 import StatisticView from './views/StatisticView';
+import SettingView from './views/SettingView';
 
 import Styles from './styles/styles.css';
 
@@ -44,6 +45,7 @@ var rootInstance = render((
       <Route path="archives" component={ArchiveList} />
       <Route path="files" component={FileList} />
       <Route path="statistic" component={StatisticView} />
+      <Route path="setting" component={SettingView} />
     </Route>
   </Router>
 ), document.getElementById('app-frame'));

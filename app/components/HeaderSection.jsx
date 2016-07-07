@@ -10,7 +10,7 @@ export default class HeaderSection extends React.Component {
                         <Link className="navbar-brand" to="/">NthsKeys</Link>
                     </div>
                     <div className="navbar-collapse">
-                        <ul className="nav navbar-nav">
+                        <ul className="nav navbar-nav navbar-left">
                             <li>
                                 <Link to="/files">文件</Link>
                             </li>
@@ -21,9 +21,14 @@ export default class HeaderSection extends React.Component {
                                 <Link to="/statistic">统计</Link>
                             </li>
                         </ul>
+                        <ul className="nav navbar-nav navbar-right">
+                            <li>
+                                <Link to="/setting"><span className="glyphicon glyphicon-cog" aria-hidden="true"></span></Link>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </nav>
         );
     }
-} 
+}

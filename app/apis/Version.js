@@ -1,6 +1,23 @@
 import config from './ApiConfig';
 import { GetAsync } from './request';
 
+let reloadReady = false;
+
+function reload() {
+    window.location.reload();
+    throw new Error('Waiting for reloading...');
+}
+
+function prepareToReload() {
+    if (reloadReady) {
+        reload();
+    } else {
+        reloadReady = true;
+    }
+}
+
+window.applicationCache.onupdateready = prepareToReload;
+
 export default () => {
     let thisVersion = JSON.parse(window.localStorage.getItem('version'));
     GetAsync(`${config.apiPrefix}/version`)
@@ -17,11 +34,12 @@ export default () => {
             if (confirm(`
                 检测到新版本：${year}-${month}-${day}
 
-                立即更新？
+                立即刷新？
             `)) {
-                window.localStorage.removeItem('version');
-                window.location.reload();
-                throw new Error('Waiting for reloading...');
+                try {
+                    window.localStorage.removeItem('version');
+                } catch (ex) { }
+                prepareToReload();
             }
         }
     }, () => {

@@ -12,17 +12,15 @@ class FileItem extends React.Component {
         this.state.fileUrl = `${config.downloadPrefix}/${props.file.grade_category}/${props.file.subject_category}/${props.file.path}`;
     }
     fileClick(e) {
-        e.preventDefault();
         if (this.state.isPic) {
+            e.preventDefault();
             let isPreviewing = this.state.isPreviewing;
             this.setState({ isPreviewing: !isPreviewing });
-        } else {
-            window.location.href = this.state.fileUrl;
         }
     }
     render() {
         return (
-            <a className="list-group-item file-item" onClick={this.fileClick.bind(this)}>
+            <a href={this.state.fileUrl} target="_blank" className="list-group-item file-item" onClick={this.fileClick.bind(this)}>
                 <div>
                     {this.props.file.path}
                     {this.state.isPreviewing ? 

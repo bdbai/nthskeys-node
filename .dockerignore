@@ -2,6 +2,7 @@
 jsconfig.json
 typings.json
 README.md
+LICENSE
 tests/
 **/node_modules
 

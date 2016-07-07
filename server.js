@@ -13,6 +13,9 @@ var version = require('./static/version.json');
 
 const ARCHIVE_PW_REGEX = /^szsz+\w{12}$/;
 const ACCESS_LOG_PATH = path.join(process.env.FILE_PATH, 'log', 'access.log');
+const MANIFEST_CONTENT =
+    fs.readFileSync(path.join(__dirname, 'static', 'cache.manifest'), 'UTF-8')
+    + '\r\n/static/bundle.js?' + version.hash;
 
 (function prepare() {
     fs.ensureFileSync(ACCESS_LOG_PATH);
@@ -24,17 +27,20 @@ var app = express();
 app.use(bodyParser.json());
 app.use(morgan('combined', {stream: accessLogStream}));
 
+// Define cache manifest m.w. .
+app.get('/cache.manifest', function(req, res) {
+    res.write(MANIFEST_CONTENT);
+    res.end();
+});
+
 // Define static source static m.w. .
-app.use('/static', express.static('static',
-    {
-        maxAge: 31536000
-    })
-);
+app.use('/static', express.static(path.join(__dirname, 'static')));
+
 // Define extracted file static m.w..
 app.use('/download', express.static(
     path.join(process.env.FILE_PATH, 'file'),
     {
-        maxAge: 31536000
+        maxAge: 31536000000
     })
 );
 
@@ -198,7 +204,7 @@ apiRouter.route('/release').post(function(req, res) {
 });
 app.use('/api', apiRouter);
 app.get('/', function(req, res) {
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
+    res.setHeader('Cache-Control', 'no-cache');
     res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 
