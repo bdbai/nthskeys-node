@@ -6,9 +6,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 
-var model = require('./model');
-var crawler = require('./crawler');
-var extractor = require('./extractor');
+var model = require('./lib/model');
+var crawler = require('./lib/crawler');
+var extractor = require('./lib/extractor');
 var version = require('./static/version.json');
 
 const ARCHIVE_PW_REGEX = /^szsz+\w{12}$/;

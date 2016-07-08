@@ -1,7 +1,7 @@
 var Promise = require('bluebird');
-var model = require('../model.js');
-var crawler = require('../crawler.js');
-var extractor = require('../extractor.js');
+var model = require('../lib/model');
+var crawler = require('../lib/crawler');
+var extractor = require('../lib/extractor');
 
 var models = {};
 model.prepare.then(function(_models) {

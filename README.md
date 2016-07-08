@@ -2,7 +2,7 @@ NthsKeys 作业答案计划 - Node ver.
 =========================
 
 [![Join the chat at https://gitter.im/bdbai/nthskeys-node](https://badges.gitter.im/bdbai/nthskeys-node.svg)](https://gitter.im/bdbai/nthskeys-node?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
+[![Build Status](https://travis-ci.org/bdbai/nthskeys-node.svg)](https://travis-ci.org/bdbai/nthskeys-node)
 ## 目的
 [省苏州十中官网](http://nths.cn/News/index.jsp)
 
@@ -20,7 +20,7 @@ export NODE_ENV="development"
 export BDTJ_ID="909044fbc84468a4ab64fc9544d428ea" # 百度统计的独立 ID
 
 # 安装依赖，打包并启动热调试服务器
-npm install -g webpack # Linux 和 macOS 需要 `sudo`
+npm install -g webpack webpack-dev-server # Linux 和 macOS 需要 `sudo`
 npm run-script build
 cd ./app
 npm start
