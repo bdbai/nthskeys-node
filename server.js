@@ -34,7 +34,10 @@ app.get('/cache.manifest', function(req, res) {
 });
 
 // Define static source static m.w. .
-app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/static', express.static(path.join(__dirname, 'static'),
+    {
+        maxAge: 31536000000
+    }));
 
 // Define extracted file static m.w..
 app.use('/download', express.static(
@@ -204,7 +207,7 @@ apiRouter.route('/release').post(function(req, res) {
 });
 app.use('/api', apiRouter);
 app.get('/', function(req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
     res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 

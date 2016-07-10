@@ -8,10 +8,14 @@ function reload() {
     throw new Error('Waiting for reloading...');
 }
 
+let reloadCancelToken;
+
 function prepareToReload() {
     if (reloadReady) {
+        clearTimeout(reloadCancelToken);
         reload();
     } else {
+        reloadCancelToken = setTimeout(reload, 3000);
         reloadReady = true;
     }
 }
