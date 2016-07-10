@@ -4,7 +4,7 @@ import config from './ApiConfig';
 
 var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = function() {}) {
     // Check validation
-    if (!releasePw.match(/^szsz+\w{12}$/)) {
+    if (!releasePw.match(/^szsz\d{12}\w{4}$/i)) {
         throw new Error('密码格式似乎不对。');
     }
     if (releaseBy === '') {

@@ -111,7 +111,7 @@ class ArchiveItem extends React.Component {
                     <div>
                         <form className="form-inline">
                             <div className="form-group">
-                                <input type="text" ref="passTxt" maxLength="16" className="form-control" placeholder="密码" />
+                                <input type="text" ref="passTxt" maxLength="20" className="form-control" placeholder="密码" />
                             </div>
                             <div class="form-group">
                                 <input type="text" ref="nameTxt" maxLength="10" className="form-control" placeholder="贡献者" />

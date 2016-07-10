@@ -11,7 +11,7 @@ var crawler = require('./lib/crawler');
 var extractor = require('./lib/extractor');
 var version = require('./static/version.json');
 
-const ARCHIVE_PW_REGEX = /^szsz+\w{12}$/;
+const ARCHIVE_PW_REGEX = /^szsz\d{12}\w{4}$/i;
 const ACCESS_LOG_PATH = path.join(process.env.FILE_PATH, 'log', 'access.log');
 const MANIFEST_CONTENT =
     fs.readFileSync(path.join(__dirname, 'static', 'cache.manifest'), 'UTF-8')
