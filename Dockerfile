@@ -3,9 +3,12 @@ MAINTAINER bdbai <htbai1998m@hotmail.com>
 
 ENV NODE_ENV production
 ENV FILE_PATH /var/data/nthskeys
-ENV BDTJ_ID 909044fbc84468a4ab64fc9544d428ea
+ENV BDTJ_ID 7fc10319f4546f2ec0bac6663c745d67
 
-RUN apk --no-cache --update add nodejs p7zip \
+ADD https://www.j3e.de/linux/convmv/convmv-2.0.tar.gz /tmp/convmv-2.0.tar.gz
+RUN apk --no-cache --update add perl nodejs p7zip \
+  && tar xf /tmp/convmv-2.0.tar.gz \
+  && mv ./convmv-2.0/convmv /usr/bin/convmv \
   && npm install -g webpack
 
 ADD . /app

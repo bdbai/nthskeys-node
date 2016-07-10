@@ -11,7 +11,7 @@ var crawler = require('./lib/crawler');
 var extractor = require('./lib/extractor');
 var version = require('./static/version.json');
 
-const ARCHIVE_PW_REGEX = /^szsz\d{12}\w{4}$/i;
+const ARCHIVE_PW_REGEX = /^szsz(\d{12}\w{4}|\w{12})$/i;
 const ACCESS_LOG_PATH = path.join(process.env.FILE_PATH, 'log', 'access.log');
 const MANIFEST_CONTENT =
     fs.readFileSync(path.join(__dirname, 'static', 'cache.manifest'), 'UTF-8')
@@ -81,7 +81,9 @@ apiRouter.route('/version').get(function(req, res) {
     res.json(version);
 });
 apiRouter.route('/archives').get(function(req, res) {
-    models.Archive.find({}).exec().then(function(result) {
+    models.Archive.find({})
+    .sort({ created_at: -1 })
+    .exec().then(function(result) {
         res.json(result);
     });
 });

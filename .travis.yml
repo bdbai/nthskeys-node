@@ -12,7 +12,7 @@ before_script:
     - 'echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list'
     - 'echo "deb http://us.archive.ubuntu.com/ubuntu/ trusty multiverse" | sudo tee /etc/apt/sources.list.d/multiverse.list'
     - "sudo apt-get update"
-    - "sudo apt-get install -y mongodb-org-server p7zip-full p7zip-rar"
+    - "sudo apt-get install -y mongodb-org-server p7zip-full p7zip-rar convmv"
     # - "sudo service mongod start"
 
     - "docker run -d --name mongo mongo"

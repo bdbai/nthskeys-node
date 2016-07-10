@@ -31,6 +31,7 @@ class SettingView extends React.Component {
                             <a alt="Fork nthskeys-node on GitHub" target="_blank" href="https://github.com/bdbai/nthskeys-node">Fork on GitHub!</a>
                         </p>
                         <p>感谢 MintShen 和 某位不愿意透露姓名的雷峰 对本项目的大力支持。</p>
+                        <p>感谢 <a alt="Recursive Land" target="_blank" href="http://recursiveg.me/">Recursive G</a> 的<a alt="记一次坑爹的乱码解决过程 by Recursive G" target="_blank" href="http://recursiveg.me/2014/02/clear-a-special-kind-of-messy-code/">这篇文章</a>解决了压缩包的乱码问题。</p>
                         <hr />
                         With <span className="glyphicon glyphicon-heart love" aria-hidden="true"></span> By&nbsp;
                         <a href="http://bdbai.22web.org/blog/" target="_blank" alt="布丁的博客">
