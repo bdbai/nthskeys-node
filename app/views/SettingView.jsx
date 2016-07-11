@@ -1,17 +1,81 @@
 import React from 'React';
 
+import Crawler from '../apis/Crawler';
+import Loading from '../components/Loading';
+
 class SettingView extends React.Component {
     constructor(props, context) {
         super(props, context);
 
         this.clearLocalStorage = this._clearLocalStorage.bind(this);
+        this.runCrawl = this._runCrawl.bind(this);
+        this.state = {
+            crawlCallInfo: 'uncalled',
+            crawlError: false,
+            crawlMessage: ''
+        }
     }
-    _clearLocalStorage() {
+    _clearLocalStorage(e) {
+        e.preventDefault();
         window.localStorage.clear();
         alert('已清除本地存储。');
         window.location.reload();
     }
+    _runCrawl(e) {
+        this.setState({
+            crawlCallInfo: 'calling'
+        });
+        Crawler.CrawlManually()
+        .then(result => {
+            this.setState({
+                crawlCallInfo: 'called',
+                crawlError: false,
+                crawlMessage: result.message
+            });
+        }, xhr => {
+            let message = '未知错误！';
+            try {
+                let result = JSON.parse(xhr.responseText);
+                message = result.message;
+            } catch (ex) { }
+            this.setState({
+                crawlCallInfo: 'called',
+                crawlError: true,
+                crawlMessage: message
+            });
+        })
+    }
     render() {
+        let crawlInfo = '';
+        switch (this.state.crawlCallInfo) {
+            case 'uncalled' :
+                crawlInfo = (
+                    <div onClick={this.runCrawl} className="btn btn-md btn-info">
+                        立即戳戳爬虫
+                    </div>
+                );
+                break;
+            case 'calling' :
+                crawlInfo = (
+                    <Loading />
+                );
+                break;
+            case 'called' :
+                if (this.state.crawlError) {
+                    crawlInfo = (
+                        <div className="alert alert-warning">
+                            {this.state.crawlMessage}
+                        </div>
+                    );
+                } else {
+                    crawlInfo = (
+                        <div className="alert alert-success">
+                            {this.state.crawlMessage}
+                        </div>
+                    );
+                }
+                break;
+        }
         return (
             <div>
                 <div className="panel panel-info">
@@ -21,6 +85,13 @@ class SettingView extends React.Component {
                         <div onClick={this.clearLocalStorage} className="btn btn-md btn-info">
                             清除本地存储
                         </div>
+                    </div>
+                </div>
+                <div className="panel panel-info">
+                    <div className="panel-heading">勤劳的爬虫</div>
+                    <div className="panel-body">
+                        <p>爬取学校官网的程序每 2 小时运行一次。若要手动运行，请确保新的压缩包还没有被爬取到。</p>
+                        {crawlInfo}
                     </div>
                 </div>
                 <div className="panel panel-default">

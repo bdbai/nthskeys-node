@@ -3,13 +3,38 @@ import { Promise } from 'ES6Promise';
 import config from './ApiConfig';
 import { GetAsync, GetOfflineAsync, OfflineConfirm } from './request';
 
+const SUBJECTS = [
+    '语文',
+    '数学',
+    '英语',
+    '物理',
+    '化学',
+    '历史',
+    '地理',
+    '政治',
+    '生物',
+    '杂项'
+]
+
 class Files {
+    static determineCategory(path) {
+        let length = SUBJECTS.length;
+        for (var i = 0; i < length; i++) {
+            let element = SUBJECTS[i];
+            if (path.indexOf(element) !== -1) {
+                return element;
+            }
+        }
+        return '杂项';
+    }
     static hierarchify(files) {
         let dirs = { dirs: new Map(), files: [], name: '目录' };
         for (let file of files) {
             let currentDir = dirs;
-            let dirparts = (file.subject_category + '/' + file.path).split('/');
+            let realCategory = this.determineCategory(file.subject_category + file.path);
+            let dirparts = file.path.split('/');
             dirparts.pop();
+            dirparts.unshift(realCategory);
             for (let dirpart of dirparts) {
                 if (typeof currentDir.dirs.get(dirpart) === 'undefined') {
                     currentDir.dirs.set(dirpart, { dirs: new Map(), files: [], name: dirpart });

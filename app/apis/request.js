@@ -29,6 +29,36 @@ export function GetAsync(url) {
     return p;
 }
 
+// TODO: extract similar logic.
+export function PostAsync(url, data) {
+    let p = new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 400) {
+                    let result = JSON.parse(xhr.responseText);
+                    resolve(result);
+                } else {
+                    reject(xhr);
+                }
+            }
+        };
+        xhr.onerror = () => {
+            reject(xhr);
+        };
+
+        try {
+            xhr.open('POST', url);
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.send(data);
+        } catch (ex) {
+            reject(ex);
+        }
+    });
+    return p;
+}
+
 export function GetOfflineAsync(url, valueKey) {
     return new Promise((resolve, reject) => {
         GetAsync(url)
@@ -62,4 +92,4 @@ export function OfflineConfirm() {
     } catch (ex) { }
 }
 
-export default { GetAsync, GetOfflineAsync, OfflineConfirm };
+export default { GetAsync, PostAsync, GetOfflineAsync, OfflineConfirm };

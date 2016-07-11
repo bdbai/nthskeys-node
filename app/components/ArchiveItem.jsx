@@ -128,7 +128,7 @@ class ArchiveItem extends React.Component {
                 break;
             case 'released' :
                 infoLine = (
-                    <div className="row text-muted">
+                    <div className="row text-muted clearfix">
                         <div className="col-xs-6">
                             <span className="glyphicon glyphicon-lock" aria-hidden="true" />
                             {this.props.archive.password}

@@ -207,14 +207,37 @@ apiRouter.route('/release').post(function(req, res) {
         res.end('保存信息时出错了。');
     });
 });
+apiRouter.route('/crawl').post(function(req, res) {
+    try {
+        crawl();
+        res.json({ message: '爬虫已经在工作了。请耐心等一等， 然后回到“压缩包”页面。' });
+    } catch (err) {
+        res.status(400);
+        res.json({ message: err.message });
+    }
+});
 app.use('/api', apiRouter);
 app.get('/', function(req, res) {
     res.setHeader('Cache-Control', 'public, max-age=31536000');
     res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 
+global.crawling = false;
+global.lastCrawlTime = new Date(0);
 function crawl() {
-    crawler(models).catch(function(err) {
+    if (global.crawling) {
+        throw new Error('爬虫正在爬行中，请稍候。');
+    }
+    var now = new Date();
+    if (now.getTime() - 300000 < global.lastCrawlTime.getTime()) {
+        throw new Error('请让爬虫休息会儿。');
+    }
+    global.crawling = true;
+    crawler(models).then(function() {
+        global.crawling = false;
+        global.lastCrawlTime = new Date();
+    }, function(err) {
+        global.crawling = false;
         console.error('Crawler died!');
     });
 }
@@ -225,6 +248,6 @@ setInterval(function() {
 
 model.prepare.then(function(_models) {
     models = _models;
-    crawl(models);
+    crawl();
     app.listen(process.env.PORT || 9004, '0.0.0.0');
 });

@@ -1,3 +1,6 @@
+.clearfix {
+    clear: both;
+}
 .navbar-header {
     float: left;
     margin: 0;
@@ -18,6 +21,12 @@
 }
 .navbar-right {
     float: right;
+}
+.new-num {
+    width: 1.5em;
+    height: 1.5em;
+    padding-top: 2px;
+    padding-left: 6px;
 }
 .well {
     word-break: break-all;

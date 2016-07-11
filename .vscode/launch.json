@@ -17,9 +17,7 @@
             "env": {
                 "NODE_ENV": "development",
                 "MONGODB_CONNECTION": "localhost:27017/nthskeys",
-                "FILE_PATH": "/home/bdbai/node/nthskeys/files",
-	            "CRAWLER_PAGE": "3",
-	            "CRAWLER_KEYWORD": "寒假作业"
+                "FILE_PATH": "/home/bdbai/node/nthskeys/files"
             },
             "externalConsole": false,
             "sourceMaps": false,
@@ -40,9 +38,7 @@
             "env": {
                 "NODE_ENV": "development",
                 "MONGODB_CONNECTION": "localhost:27017/nthskeys",
-                "FILE_PATH": "/home/bdbai/node/nthskeys/files",
-	            "CRAWLER_PAGE": "3",
-	            "CRAWLER_KEYWORD": "寒假作业"
+                "FILE_PATH": "/home/bdbai/node/nthskeys/files"
             },
             "externalConsole": false,
             "sourceMaps": false,
