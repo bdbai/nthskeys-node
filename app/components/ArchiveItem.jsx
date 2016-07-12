@@ -3,6 +3,7 @@ import React from 'React';
 import Loading from './Loading';
 import FileItem from './FileItem';
 import Files from '../apis/Files';
+import Archives from '../apis/Archives';
 import Extractor from '../apis/Extractor';
 
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
@@ -78,6 +79,7 @@ class ArchiveItem extends React.Component {
                 } else {
                     this.loadFileList();
                     this.setState({ releaseState: 'success' });
+                    Archives.getArchives();
                 }
             }, (err) => {
                 this.setState({ releaseState: 'error', errorText: err.message });

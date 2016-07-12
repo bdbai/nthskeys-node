@@ -1,6 +1,6 @@
 import { Promise } from 'ES6Promise';
 
-export function GetAsync(url) {
+function sendRequestAsync(url, method = 'GET', data = '') {
     let p = new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
 
@@ -19,9 +19,14 @@ export function GetAsync(url) {
         };
 
         try {
-            xhr.open('GET', url);
+            xhr.open(method, url);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.send();
+            let upperMethod = method.toUpperCase();
+            if (upperMethod === 'POST' || upperMethod === 'PUT') {
+                xhr.send(data);
+            } else {
+                xhr.send();
+            }
         } catch (ex) {
             reject(ex);
         }
@@ -29,34 +34,12 @@ export function GetAsync(url) {
     return p;
 }
 
-// TODO: extract similar logic.
+export function GetAsync(url) {
+    return sendRequestAsync(url);
+}
+
 export function PostAsync(url, data) {
-    let p = new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 400) {
-                    let result = JSON.parse(xhr.responseText);
-                    resolve(result);
-                } else {
-                    reject(xhr);
-                }
-            }
-        };
-        xhr.onerror = () => {
-            reject(xhr);
-        };
-
-        try {
-            xhr.open('POST', url);
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.send(data);
-        } catch (ex) {
-            reject(ex);
-        }
-    });
-    return p;
+    return sendRequestAsync(url, 'POST', data);
 }
 
 export function GetOfflineAsync(url, valueKey) {

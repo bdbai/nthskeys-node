@@ -27,6 +27,19 @@ class Files {
         }
         return '杂项';
     }
+    static unique(files) {
+        let ret = [];
+        let ids = new Map();
+        for (let file of files) {
+            let pointer = ids.get(file._id);
+            if (typeof pointer === 'undefined') {
+                ids.set(file._id, ret.push(file) - 1);
+            } else {
+                ret[pointer] = file;
+            }
+        }
+        return ret;
+    }
     static hierarchify(files) {
         let dirs = { dirs: new Map(), files: [], name: '目录' };
         for (let file of files) {
@@ -66,6 +79,7 @@ class Files {
                         localFiles.newFiles = data;
                     }
                     localFiles.files.push(...data);
+                    localFiles.files = this.unique(localFiles.files);
                 } else if (localFiles.newFiles.length !== 0) {
                     newDirs = this.hierarchify(localFiles.newFiles);
                 }

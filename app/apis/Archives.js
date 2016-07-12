@@ -14,24 +14,19 @@ class Archives {
         delete window.archiveNewCountCallbacks[handle];
     }
     static getArchives() {
-        for (let cb of window.archiveNewCountCallbacks) {
-            if (typeof cb === 'function') {
-                try {
-                    cb();
-                } catch (ex) { }
-            }
-        }
         return GetOfflineAsync(`${config.apiPrefix}/archives`, 'archives')
         .then((archives) => {
             let unreleasedArchives = archives.filter(archive => archive.status === 'unreleased');
             let unreleasedCount = unreleasedArchives.length;
-            for (let cb of window.archiveNewCountCallbacks) {
-                if (typeof cb === 'function') {
-                    try {
-                        cb(unreleasedCount);
-                    } catch (ex) { }
+            try { // Error if Symbol is missing.
+                for (let cb of window.archiveNewCountCallbacks) {
+                    if (typeof cb === 'function') {
+                        try {
+                            cb(unreleasedCount);
+                        } catch (ex) { }
+                    }
                 }
-            }
+            } catch(err) { }
             return new Promise((resolve, reject) => {
                 resolve(archives);
             });

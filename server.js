@@ -74,7 +74,7 @@ var models = {};
 
 var apiRouter = express.Router();
 apiRouter.use(function(req, res, next) {
-    res.setHeader('Cache-Control', 'must-revalidate, max-age=15');
+    res.setHeader('Cache-Control', 'must-revalidate, max-age=5');
     next();
 });
 apiRouter.route('/version').get(function(req, res) {
