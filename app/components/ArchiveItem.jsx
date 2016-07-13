@@ -2,6 +2,7 @@ import React from 'React';
 
 import Loading from './Loading';
 import FileItem from './FileItem';
+import { getUser, updateUser } from '../apis/User';
 import Files from '../apis/Files';
 import Archives from '../apis/Archives';
 import Extractor from '../apis/Extractor';
@@ -13,6 +14,10 @@ class ArchiveItem extends React.Component {
         super(props, context);
         
         this.wrongPassword = false;
+        this.loadFileList = this._loadFileList.bind(this);
+        this.previewBtnClick = this._previewBtnClick.bind(this);
+        this.submitRelease = this._submitRelease.bind(this);
+        this.fillName = this._fillName.bind(this);
         this.state = {
             releaseState: 'not running',
             releaseOutput: '',
@@ -28,7 +33,7 @@ class ArchiveItem extends React.Component {
             this.refs.outputWell.innerText = this.state.releaseOutput;
         }
     }
-    loadFileList() {
+    _loadFileList() {
         if (this.state.loadingFilelist) {
             return;
         }
@@ -48,11 +53,11 @@ class ArchiveItem extends React.Component {
             this.setState({ loadingFilelist: false });
         });
     }
-    previewBtnClick(e) {
+    _previewBtnClick(e) {
         e.preventDefault();
         this.loadFileList();
     }
-    submitRelease(e) {
+    _submitRelease(e) {
         e.preventDefault();
         try {
             this.wrongPassword = false;
@@ -85,10 +90,16 @@ class ArchiveItem extends React.Component {
                 this.setState({ releaseState: 'error', errorText: err.message });
             });
             this.setState({ releaseState: 'running' });
+            updateUser(this.refs.nameTxt.value);
         } catch (err) {
             this.setState({ releaseState: 'preerror', errorText: err.message });
         }
         
+    }
+    _fillName(e) {
+        if (this.refs.nameTxt.value === '') {
+            this.refs.nameTxt.value = getUser();
+        }
     }
     render() {
         let containerClass = 'archive-item list-group-item';
@@ -116,14 +127,13 @@ class ArchiveItem extends React.Component {
                                 <input type="text" ref="passTxt" maxLength="20" className="form-control" placeholder="密码" />
                             </div>
                             <div class="form-group">
-                                <input type="text" ref="nameTxt" maxLength="10" className="form-control" placeholder="贡献者" />
+                                <input type="text" ref="nameTxt" onClick={this.fillName} maxLength="10" className="form-control" placeholder="贡献者" />
                             </div>
                             {this.state.releaseState === 'running' || this.state.releaseState === 'success' ?
                                 (<button type="submit" disabled="disabled" className="btn btn-default">提交！</button>)
                                 :
-                                (<button onClick={this.submitRelease.bind(this)} type="submit" className="btn btn-default">提交！</button>)
+                                (<button onClick={this.submitRelease} type="submit" className="btn btn-default">提交！</button>)
                             }
-
                         </form>
                     </div>
                 );
@@ -193,7 +203,7 @@ class ArchiveItem extends React.Component {
                     {this.props.archive.title}
                     {
                         this.props.archive.status === 'released' ?
-                        <button onClick={this.previewBtnClick.bind(this)}
+                        <button onClick={this.previewBtnClick}
                                 className={(
                                     this.state.loadingFilelist
                                     || this.state.loadedFileList && this.state.displayFileList

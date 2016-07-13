@@ -5,7 +5,7 @@
   "main": "App.jsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV='development' BDTJ_ID='909044fbc84468a4ab64fc9544d428ea' webpack-dev-server --host 0.0.0.0 --progress --config webpack.development.config.js --hot --inline",
+    "start": "DAOVOICE_ID='5e97ea9b' NODE_ENV='development' BDTJ_ID='909044fbc84468a4ab64fc9544d428ea' webpack-dev-server --host 0.0.0.0 --progress --config webpack.development.config.js --hot --inline",
     "build": "NODE_ENV='production' webpack --config webpack.production.config.js"
   },
   "keywords": [

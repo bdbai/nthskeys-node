@@ -32,9 +32,10 @@ module.exports = {
             title: 'NthsKeys',
             template: 'index.development.ejs',
             hash: true,
-            BDTJ_ID: process.env.BDTJ_ID
+            BDTJ_ID: process.env.BDTJ_ID,
+            DAOVOICE_ID: process.env.DAOVOICE_ID
         }),
-        new webpack.EnvironmentPlugin(["NODE_ENV", "BDTJ_ID"]),
+        new webpack.EnvironmentPlugin(["NODE_ENV", "BDTJ_ID", "DAOVOICE_ID"]),
         new HashOutputPlugin(path.join(__dirname, '../static', 'version.json')),
         new CopyWebpackPlugin([
             {

@@ -53,7 +53,7 @@ export default class HeaderSection extends React.Component {
                         </ul>
                         <ul className="nav navbar-nav navbar-right">
                             <li>
-                                <Link to="/setting"><span className="glyphicon glyphicon-cog" aria-hidden="true"></span></Link>
+                                <Link to="/setting"><span className="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></Link>
                             </li>
                         </ul>
                     </div>

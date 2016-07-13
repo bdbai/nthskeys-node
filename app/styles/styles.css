@@ -1,6 +1,8 @@
 .clearfix {
     clear: both;
 }
+
+/* Start: force navbar not to collapse */
 .navbar-header {
     float: left;
     margin: 0;
@@ -22,6 +24,8 @@
 .navbar-right {
     float: right;
 }
+/* End: force navbar not to collapse */
+
 .new-num {
     width: 1.5em;
     height: 1.5em;
@@ -29,6 +33,7 @@
     padding-left: 6px;
 }
 .well {
+    /* Release logging container */
     word-break: break-all;
 }
 .file-item {
@@ -52,6 +57,8 @@
 .love {
     color: crimson;
 }
+
+/* Start: global transition definition */
 @keyframes loading {
     from {
         left: 0;
@@ -83,3 +90,4 @@
     margin-top: -15px;
     opacity: 0;
 }
+/* End: global transition definition */

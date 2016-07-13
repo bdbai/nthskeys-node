@@ -2,6 +2,7 @@ import React from 'React';
 import { render } from 'ReactDOM';
 import { Router, Route, IndexRoute } from 'ReactRouter';
 
+import { initialUser } from './apis/User';
 import { PageView } from './apis/BdTongji';
 import UpdateVersion from './apis/Version';
 
@@ -17,6 +18,7 @@ const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 try {
     UpdateVersion();
+    initialUser();
 } catch (ex) { }
 
 class App extends React.Component {
