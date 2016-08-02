@@ -239,6 +239,7 @@ function crawl() {
     }, function(err) {
         global.crawling = false;
         console.error('Crawler died!');
+        console.error(err);
     });
 }
 
