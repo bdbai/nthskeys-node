@@ -8,6 +8,10 @@
     "test": "./test/test.sh",
     "build": "npm install && cd app && npm install && npm run-script build"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bdbai/nthskeys-node.git"
+  },
   "keywords": [
     "express",
     "mongodb"
