@@ -27,6 +27,11 @@ class FileList extends React.Component {
             console.log(err);
         });
     }
+    getFileDirItems(dirs) {
+        return Array.from(dirs).map((dir, index) => {
+            return (<FileDirItem key={index} dir={dir} expanded={false} />);
+        });
+    }
     render() {
         if (!this.state.loaded) {
             return (<Loading />);
@@ -47,9 +52,9 @@ class FileList extends React.Component {
                     </div>
                     <div className="panel-body">
                         <div className="list-group">
-                            {Array.from(this.state.dirs.newDirs.dirs.values()).map((dir, index) => {
-                                return (<FileDirItem key={index} dir={dir} />);
-                            })}
+                            {
+                                this.getFileDirItems(Array.from(this.state.dirs.newDirs.dirs.values()))
+                            }
                         </div>
                     </div>
                 </section>
@@ -63,9 +68,9 @@ class FileList extends React.Component {
                         所有文件
                     </div>
                     <div className="panel-body">
-                        {Array.from(this.state.dirs.allDirs.dirs.values()).map((dir, index) => {
-                            return (<FileDirItem key={index} dir={dir} />);
-                        })}
+                        {
+                            this.getFileDirItems(Array.from(this.state.dirs.allDirs.dirs.values()))
+                        }
                     </div>
                 </section>
             </div>

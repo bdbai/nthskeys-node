@@ -20,7 +20,7 @@ class FileItem extends React.Component {
     }
     render() {
         return (
-            <a href={this.state.fileUrl} target="_blank" className="list-group-item file-item" onClick={this.fileClick.bind(this)}>
+            <a href={this.state.fileUrl} target="_blank" className="list-group-item clickable" onClick={this.fileClick.bind(this)}>
                 <div>
                     {this.props.file.path}
                     {this.state.isPreviewing ? 

@@ -207,7 +207,7 @@ class ArchiveItem extends React.Component {
                                 className={(
                                     this.state.loadingFilelist
                                     || this.state.loadedFileList && this.state.displayFileList
-                                    ? 'active ' : '') + 'btn btn-default preview-link pull-right text-muted'}>
+                                    ? 'active ' : '') + 'btn btn-default clickable pull-right text-muted'}>
                             <span className="glyphicon glyphicon-list" aria-hidden="true"></span>
                             &nbsp;预览内容
                         </button>

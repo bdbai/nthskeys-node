@@ -32,12 +32,7 @@
     padding-top: 2px;
     padding-left: 6px;
 }
-.well {
-    /* Release logging container */
-    word-break: break-all;
-}
-.file-item {
-    cursor: pointer;
+.well, .file-item {
     word-break: break-all;
 }
 .dir-item:hover {
@@ -51,7 +46,7 @@
 .archive-preview-con {
     margin-top: 10px;
 }
-.preview-link {
+.clickable {
     cursor: pointer;
 }
 .love {
