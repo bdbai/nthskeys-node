@@ -5,36 +5,75 @@ import FileItem from './FileItem';
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 class FileDirItem extends React.Component {
+    static getInitialExpansion(dirPath, defaultValue = false) {
+        try {
+            let expanded = JSON.parse(window.sessionStorage.getItem('expanded_' + dirPath));
+            if (expanded === null) {
+                window.sessionStorage.setItem('expanded_' + dirPath, defaultValue);
+                return defaultValue;
+            } else {
+                return expanded;
+            }
+        } catch (ex) {
+            return defaultValue;
+        }
+    }
     constructor(props, context) {
         super(props, context);
 
+        this.dir = props.dir;
+        this.path = this.props.path;
+        this.dirName = props.dir.name;
+        if (!(props.nestCheck === false)) {
+            while (this.dir.dirs.size === 1 && this.dir.files.length === 0) {
+                let nextDir = this.dir.dirs.values().next().value;
+                let nameToAppend = '/' + nextDir.name;
+                this.dirName += nameToAppend;
+                this.path += nameToAppend;
+                this.dir = nextDir;
+            }
+        }
+
+        let initialExpanded = FileDirItem.getInitialExpansion(this.path, props.expanded);
         this.toggleExpansion = this._toggleExpansion.bind(this);
         this.state = {
-            expanded: props.expanded
+            expanded: initialExpanded
         };
     }
     _toggleExpansion(e) {
         e.stopPropagation();
+        try {
+            window.sessionStorage.setItem('expanded_' + this.path, !this.state.expanded);
+        } catch (_) { }
         this.setState({ expanded: !this.state.expanded });
+    }
+    getDirItems() {
+        let path = this.path;
+        return Array.from(this.dir.dirs.values()).map((dir, i) => {
+            return (
+                <FileDirItem
+                    path={path + '/' + dir.name}
+                    key={i}
+                    dir={dir}
+                    expanded={false}
+                />
+            );
+        });
+    }
+    getFileItems() {
+        return this.dir.files.map((file, i) => {
+            return (<FileItem key={i} file={file} />);
+        });
     }
 
     render() {
         let content = '';
         if (this.state.expanded) {
+            console.log(this.state.expanded);
             content = (
                 <div className="list-group">
-                    <ReactCSSTransitionGroup transitionName="tran" transitionEnterTimeout={500} transitionLeaveTimeout={250}>
-                        {
-                            Array.from(this.props.dir.dirs.values()).map((dir, i) => {
-                                return (<FileDirItem key={i} dir={dir} expanded={true} />);
-                            })
-                        }
-                        {
-                            this.props.dir.files.map((file, i) => {
-                                return (<FileItem key={i} file={file} expanded={true} />);
-                            })
-                        }
-                    </ReactCSSTransitionGroup>
+                    { this.getDirItems() }
+                    { this.getFileItems() }
                 </div>
             );
         }
@@ -44,8 +83,10 @@ class FileDirItem extends React.Component {
               className="list-group-item list-group-item-info dir-item clickable"
               onClick={this.toggleExpansion}
             >
-                {this.props.dir.name}
-                {content}
+                {this.dirName}
+                <ReactCSSTransitionGroup transitionName="tran" transitionEnterTimeout={500} transitionLeaveTimeout={250}>
+                    {content}
+                </ReactCSSTransitionGroup>
             </div>
         );
     }

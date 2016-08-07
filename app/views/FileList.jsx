@@ -29,7 +29,7 @@ class FileList extends React.Component {
     }
     getFileDirItems(dirs) {
         return Array.from(dirs).map((dir, index) => {
-            return (<FileDirItem key={index} dir={dir} expanded={false} />);
+            return (<FileDirItem path={dir.name} key={index} dir={dir} nestCheck={false} expanded={true} />);
         });
     }
     render() {

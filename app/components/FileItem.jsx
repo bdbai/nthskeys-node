@@ -6,14 +6,16 @@ import PreviewItem from './PreviewItem';
 class FileItem extends React.Component {
     constructor(props, context) {
         super(props, context);
-        
+
+        this.fileClick = this._fileClick.bind(this);
         this.state = { isPreviewing: false };
-        this.state.isPic = props.file.path.match(/\.(jpg|png|gif)/i);
+        this.state.isPic = props.file.path.match(/\.(jp(e)?g|png|gif)/i);
         this.state.fileUrl = `${config.downloadPrefix}/${props.file.grade_category}/${props.file.subject_category}/${props.file.path}`;
     }
-    fileClick(e) {
+    _fileClick(e) {
         if (this.state.isPic) {
             e.preventDefault();
+            e.stopPropagation();
             let isPreviewing = this.state.isPreviewing;
             this.setState({ isPreviewing: !isPreviewing });
         }
@@ -23,7 +25,7 @@ class FileItem extends React.Component {
             <a href={this.state.fileUrl} target="_blank" className="list-group-item clickable" onClick={this.fileClick.bind(this)}>
                 <div>
                     {this.props.file.path}
-                    {this.state.isPreviewing ? 
+                    {this.state.isPreviewing ?
                         (<PreviewItem file={this.props.file} />) : ''
                     }
                 </div>
