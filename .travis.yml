@@ -2,18 +2,25 @@ language: node_js
 node_js:
   - "6"
 services:
-  # - mongodb
+  - mongodb
   - docker
+cache:
+  bundler: true
+  directories:
+    - node_modules
+    - app/node_modules
 before_script:
     # - "until nc -z localhost 27017; do echo Waiting for MongoDB; sleep 1; done"
 
     # Install MongoDB and p7zip manually
-    - "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927"
-    - 'echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list'
+    # - "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927"
+    # - 'echo "deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.2.list'
     - 'echo "deb http://us.archive.ubuntu.com/ubuntu/ trusty multiverse" | sudo tee /etc/apt/sources.list.d/multiverse.list'
     - "sudo apt-get update"
-    - "sudo apt-get install -y mongodb-org-server p7zip-full p7zip-rar convmv"
-    # - "sudo service mongod start"
+    # - "sudo apt-get remove -y mongodb-org-server"
+    - "sudo apt-get install -y p7zip-full p7zip-rar convmv"
+    # - "sudo apt-get install -y mongodb-org-server p7zip-full p7zip-rar convmv"
+    - "sudo service mongod start"
 
     - "docker run -d --name mongo mongo"
     - "docker build -t bdbai/nthskeys-node ."

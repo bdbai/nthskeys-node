@@ -5,11 +5,16 @@ import FileItem from './FileItem';
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
 class FileDirItem extends React.Component {
+    static storeExpansionState(dirPath, state) {
+        try {
+            window.sessionStorage.setItem(`expanded_${dirPath}`, state);
+        } catch (_) { }
+    }
     static getInitialExpansion(dirPath, defaultValue = false) {
         try {
             let expanded = JSON.parse(window.sessionStorage.getItem('expanded_' + dirPath));
             if (expanded === null) {
-                window.sessionStorage.setItem('expanded_' + dirPath, defaultValue);
+                FileDirItem.storeExpansionState(dirPath, defaultValue);
                 return defaultValue;
             } else {
                 return expanded;
@@ -42,9 +47,7 @@ class FileDirItem extends React.Component {
     }
     _toggleExpansion(e) {
         e.stopPropagation();
-        try {
-            window.sessionStorage.setItem('expanded_' + this.path, !this.state.expanded);
-        } catch (_) { }
+        FileDirItem.storeExpansionState(this.path, !this.state.expanded);
         this.setState({ expanded: !this.state.expanded });
     }
     getDirItems() {
@@ -52,7 +55,7 @@ class FileDirItem extends React.Component {
         return Array.from(this.dir.dirs.values()).map((dir, i) => {
             return (
                 <FileDirItem
-                    path={path + '/' + dir.name}
+                    path={`${path}/${dir.name}`}
                     key={i}
                     dir={dir}
                     expanded={false}
@@ -69,7 +72,6 @@ class FileDirItem extends React.Component {
     render() {
         let content = '';
         if (this.state.expanded) {
-            console.log(this.state.expanded);
             content = (
                 <div className="list-group">
                     { this.getDirItems() }

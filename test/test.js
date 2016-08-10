@@ -1,21 +1,28 @@
-var Promise = require('bluebird');
-var model = require('../lib/model');
-var crawler = require('../lib/crawler');
-var extractor = require('../lib/extractor');
+'use strict';
+const Promise = require('bluebird');
+const model = require('../lib/model');
+const Crawler = require('../lib/crawler');
+const Extractor = require('../lib/extractor');
 
-var models = {};
-model.prepare.then(function(_models) {
+let models = {};
+model.then(_models => {
     models = _models;
-    crawler(models).then(function(count) {
-        console.log('Found ' + count + ' new archives.');
-        return models.Archive.findOne({ title: process.env.ARCHIVE_NAME }).exec();
-    }).then(function(archive) {
-        return extractor(models, archive, process.env.ARCHIVE_PASS);
-    }).then(function() {
-        console.log('Extraction done!');
-        process.exit();
-    }).catch(function(err) {
-        console.error(err);
-        process.exit(1);
-    });
-});
+    const c = new Crawler(models);
+    return c.crawlAsync();
+}).then(count => {
+     console.log('Found ' + count + ' new archives.');
+     return models.Archive.findOne({ title: process.env.ARCHIVE_NAME }).exec();
+ }).then(archive => {
+     const e = new Extractor(
+         models,
+         archive,
+         process.env.ARCHIVE_PASS
+     );
+     return e.extractAsync();
+ }).then(() => {
+     console.log('Extraction done!');
+     process.exit(0);
+ }).catch(err => {
+     console.error(err);
+     process.exit(1);
+ })

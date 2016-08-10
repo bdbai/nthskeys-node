@@ -23,10 +23,11 @@
             "sourceMaps": false,
             "outDir": null
         },
-        {    "name": "启动爬虫",
+        {
+            "name": "启动测试",
             "type": "node",
             "request": "launch",
-            "program": "${workspaceRoot}/crawler.js",
+            "program": "${workspaceRoot}/test/test.js",
             "stopOnEntry": false,
             "args": [],
             "cwd": "${workspaceRoot}",
@@ -38,7 +39,9 @@
             "env": {
                 "NODE_ENV": "development",
                 "MONGODB_CONNECTION": "localhost:27017/nthskeys",
-                "FILE_PATH": "/home/bdbai/node/nthskeys/files"
+                "FILE_PATH": "/home/bdbai/node/nthskeys/files",
+                "ARCHIVE_NAME": "高二年级暑期作业第一阶段（语数英）参考答案.zip",
+                "ARCHIVE_PASS": "SZSZ159462582334GSSM"
             },
             "externalConsole": false,
             "sourceMaps": false,
