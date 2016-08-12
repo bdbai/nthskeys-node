@@ -20,7 +20,7 @@ before_script:
     # - "sudo apt-get remove -y mongodb-org-server"
     - "sudo apt-get install -y p7zip-full p7zip-rar convmv"
     # - "sudo apt-get install -y mongodb-org-server p7zip-full p7zip-rar convmv"
-    - "sudo service mongod start"
+    # - "sudo service mongod start"
 
     - "docker run -d --name mongo mongo"
     - "docker build -t bdbai/nthskeys-node ."

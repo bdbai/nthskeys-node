@@ -7,4 +7,4 @@ export NODE_ENV="development"
 export MONGODB_CONNECTION="localhost/nthskeys"
 export FILE_PATH=$PWD/files
 export CRAWLER_PAGE="1"
-export CRAWLER_KEYWORD="暑假作业"
+export CRAWLER_KEYWORD="第一阶段语数外"

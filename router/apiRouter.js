@@ -31,7 +31,7 @@ function crawl() {
         throw new Error('请让爬虫休息会儿。');
     }
     crawling = true;
-    crawler.crawlAsync().then(() => {
+    return crawler.crawlAsync().then(() => {
         crawling = false;
         lastCrawlTime = new Date();
     }, err => {
