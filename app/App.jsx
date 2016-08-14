@@ -40,7 +40,7 @@ function onRouterChange(prevState, nextState) {
     PageView(nextState.location.pathname);
 }
 
-var rootInstance = render((
+const rootInstance = render((
   <Router>
     <Route path="/" component={App} onChange={onRouterChange}>
       <IndexRoute component={FileList} />
@@ -54,8 +54,7 @@ var rootInstance = render((
 
 if (process.env.NODE_ENV === 'development' && module.hot) {
   require('react-hot-loader/Injection').RootInstanceProvider.injectProvider({
-    getRootInstances: function () {
-      return [rootInstance];
-    }
+    getRootInstances: () => [rootInstance]
   });
 }
+

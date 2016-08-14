@@ -1,13 +1,13 @@
 import { Promise } from 'ES6Promise';
 
 function sendRequestAsync(url, method = 'GET', data = '') {
-    let p = new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 0 || xhr.status >= 200 && xhr.status < 400) {
-                    let result = JSON.parse(xhr.responseText);
+                    const result = JSON.parse(xhr.responseText);
                     resolve(result);
                 } else {
                     reject(xhr);
@@ -21,7 +21,7 @@ function sendRequestAsync(url, method = 'GET', data = '') {
         try {
             xhr.open(method, url);
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            let upperMethod = method.toUpperCase();
+            const upperMethod = method.toUpperCase();
             if (upperMethod === 'POST' || upperMethod === 'PUT') {
                 xhr.send(data);
             } else {
@@ -31,7 +31,6 @@ function sendRequestAsync(url, method = 'GET', data = '') {
             reject(ex);
         }
     });
-    return p;
 }
 
 export function GetAsync(url) {
@@ -52,8 +51,8 @@ export function GetOfflineAsync(url, valueKey) {
             resolve(result);
         }, err => {
             try {
-                let result = window.localStorage.getItem(valueKey);
-                if (typeof result !== 'undefined' && result !== null) {
+                const result = window.localStorage.getItem(valueKey);
+                if (!!result) {
                     OfflineConfirm();
                     resolve(JSON.parse(result));
                 } else {
@@ -76,3 +75,4 @@ export function OfflineConfirm() {
 }
 
 export default { GetAsync, PostAsync, GetOfflineAsync, OfflineConfirm };
+

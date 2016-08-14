@@ -18,9 +18,7 @@ const SUBJECTS = [
 
 class Files {
     static determineCategory(path) {
-        let length = SUBJECTS.length;
-        for (var i = 0; i < length; i++) {
-            let element = SUBJECTS[i];
+        for (let element of SUBJECTS) {
             if (path.indexOf(element) !== -1) {
                 return element;
             }
@@ -28,8 +26,8 @@ class Files {
         return '杂项';
     }
     static unique(files) {
-        let ret = [];
-        let ids = new Map();
+        const ret = [];
+        const ids = new Map();
         for (let file of files) {
             let pointer = ids.get(file._id);
             if (typeof pointer === 'undefined') {
@@ -41,11 +39,11 @@ class Files {
         return ret;
     }
     static hierarchify(files) {
-        let dirs = { dirs: new Map(), files: [], name: '目录' };
+        const dirs = { dirs: new Map(), files: [], name: '目录' };
         for (let file of files) {
             let currentDir = dirs;
-            let realCategory = this.determineCategory(file.subject_category + file.path);
-            let dirparts = file.path.split('/');
+            const realCategory = this.determineCategory(file.subject_category + file.path);
+            const dirparts = file.path.split('/');
             dirparts.pop();
             dirparts.unshift(realCategory);
             for (let dirpart of dirparts) {
@@ -68,11 +66,11 @@ class Files {
         try {
             localFiles = JSON.parse(window.localStorage.getItem('file')) || localFiles;
         } catch (ex) { }
-        let dfd = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             let newDirs = null;
             GetAsync(`${config.apiPrefix}/files?last_update=${localFiles.lastUpdate}`)
             .then(apiResult => {
-                let data = apiResult.result;
+                const data = apiResult.result;
                 if (data && data.length > 0) {
                     if (localFiles.files.length > 0) {
                         newDirs = this.hierarchify(data);
@@ -91,7 +89,7 @@ class Files {
                     }));
                 } catch (ex) { }
 
-                let allDirs = this.hierarchify(localFiles.files);
+                const allDirs = this.hierarchify(localFiles.files);
 
                 resolve({
                     newDirs,
@@ -102,7 +100,7 @@ class Files {
                     if (localFiles.newFiles.length > 0) {
                         newDirs = this.hierarchify(localFiles.newFiles);
                     }
-                    let ret = {
+                    const ret = {
                         'newDirs': newDirs,
                         'allDirs': this.hierarchify(localFiles.files)
                     }
@@ -114,7 +112,6 @@ class Files {
             });
 
         });
-        return dfd;
     }
     static getFilesByArchive(archiveId) {
         return GetOfflineAsync(`${config.apiPrefix}/filesbyarchive?archive_id=${archiveId}`, `archive_${archiveId}`);
@@ -122,3 +119,4 @@ class Files {
 }
 
 export default Files;
+

@@ -47,3 +47,4 @@ class StatisticView extends React.Component {
 }
 
 export default StatisticView;
+

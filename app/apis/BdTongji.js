@@ -3,7 +3,7 @@
     window._hmt = window._hmt || [];
 })();
 
-let hmt = window._hmt;
+const hmt = window._hmt;
 
 export function PageView(pageLocation) {
     hmt.push(['_trackPageview', pageLocation]);
@@ -17,3 +17,4 @@ export default {
     PageView,
     TrackEvent
 }
+

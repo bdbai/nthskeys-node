@@ -3,7 +3,7 @@ import { Link } from 'ReactRouter';
 
 import Archives from '../apis/Archives';
 
-export default class HeaderSection extends React.Component {
+class HeaderSection extends React.Component {
     constructor(props, context) {
         super(props, context);
 
@@ -62,3 +62,6 @@ export default class HeaderSection extends React.Component {
         );
     }
 }
+
+export default HeaderSection;
+

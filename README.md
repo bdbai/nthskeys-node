@@ -8,48 +8,53 @@ NthsKeys 作业答案计划 - Node ver.
 
 某中学每年都把假期作业答案加密压缩并上传至其官网，且没有归类，这给学生带来了很大麻烦。我开启这个项目，目的是通过自动化的方式来简化答案下载、解压、归类这一过程。
 
+## 功能
+ - [x] 浏览已解压文件
+ - [x] 一键解压压缩包
+ - [x] 自动整理和归类
+
 ## 架构
-服务器端使用 Express 为服务框架， MongoDB 为数据库。前端使用 React 和 Bootstrap。
+服务器端使用 Node.js 6 + Express 为服务框架， MongoDB 为数据库。前端使用 React 和 Bootstrap。
 
-## 构建和运行
-### 前端
-
+## 环境变量
 ```bash
-# 指定环境变量
-export NODE_ENV="development"
-export BDTJ_ID="909044fbc84468a4ab64fc9544d428ea" # 百度统计的独立 ID
+# MongoDB 连接字符串
+export MONGODB_CONNECTION="localhost:27017/nthskeys"
 
-# 安装依赖，打包并启动热调试服务器
-npm install -g webpack webpack-dev-server # Linux 和 macOS 需要 `sudo`
-npm run-script build
-cd ./app
-npm start
+# 数据目录
+export FILE_PATH="/var/data/nthskeys"
+
+# 服务器监听端口，默认 9004，非必需
+export PORT="9004"
+
+# 百度统计的独立 ID，非必需
+export BDTJ_ID="909044fbc84468a4ab64fc9544d428ea"
+
+# DaoVoice ID，非必需
+export DAOVOICE_ID="5e97ea9b"
 ```
 
-### 服务器端
+## 后端模块测试
+```
+npm install
+npm test
+```
 
+## 构建和运行
+### 调试
 ```bash
-# 指定环境变量
 export NODE_ENV="development"
-export MONGODB_CONNECTION="localhost:27017/nthskeys" # MongoDB 的路径、端口和 collection
-export FILE_PATH="/var/data/nthskeys" # 压缩包、解压文档和访问日志目录
-
-# 运行服务器
-npm start
+npm install -g webpack webpack-dev-server # Linux 和 macOS 需要 `sudo`
+npm run build
+node server.js # 启动后端服务器于端口 9004
+cd ./app
+npm start # 启动前端热调试服务器于端口 8080
 ```
 
 ## 生产环境
 ```bash
-# 指定环境变量
 export NODE_ENV="production"
-export MONGODB_CONNECTION="localhost:27017/nthskeys" # MongoDB 的路径、端口和 collection
-export FILE_PATH="/var/data/nthskeys" # 压缩包、解压文档和访问日志目录
-export BDTJ_ID="909044fbc84468a4ab64fc9544d428ea" # 百度统计的独立 ID，请更换为自己的
-
-# 执行前端打包任务
-npm run-script build
-
-# 运行服务器
+sudo npm install -g webpack
+npm run build
 node server.js
 ```
-

@@ -7,7 +7,7 @@ import ArchiveItem from '../components/ArchiveItem';
 class ArchiveList extends React.Component {
     constructor(props, context) {
         super(props, context);
-        
+
         this.state = { loaded: false, archives: [] };
     }
     componentDidMount() {
@@ -36,3 +36,4 @@ class ArchiveList extends React.Component {
 }
 
 export default ArchiveList;
+

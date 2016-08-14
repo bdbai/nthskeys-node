@@ -13,9 +13,9 @@ export function getUser() {
 }
 
 export function initialUser() {
-    let userName = getUser();
-    let isVisitor = userName === null;
-    let options = {
+    const userName = getUser();
+    const isVisitor = userName === null;
+    const options = {
         app_id: process.env.DAOVOICE_ID
     }
     try {
@@ -36,3 +36,4 @@ export function updateUser(userName = null) {
         initialUser();
     } catch (ex) { }
 }
+

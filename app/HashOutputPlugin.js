@@ -1,9 +1,9 @@
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-module.exports = function(outputFilePath) {
+function HashOutputPlugin(outputFilePath) {
     return function() {
-        this.plugin('done', function(stats) {
+        this.plugin('done', stats => {
             fs.writeFileSync(
                 outputFilePath,
                 JSON.stringify({
@@ -14,3 +14,6 @@ module.exports = function(outputFilePath) {
         })
     }
 }
+
+module.exports = HashOutputPlugin;
+

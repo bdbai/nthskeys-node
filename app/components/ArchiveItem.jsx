@@ -12,7 +12,7 @@ const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 class ArchiveItem extends React.Component {
     constructor(props, context) {
         super(props, context);
-        
+
         this.wrongPassword = false;
         this.loadFileList = this._loadFileList.bind(this);
         this.previewBtnClick = this._previewBtnClick.bind(this);
@@ -94,7 +94,7 @@ class ArchiveItem extends React.Component {
         } catch (err) {
             this.setState({ releaseState: 'preerror', errorText: err.message });
         }
-        
+
     }
     _fillName(e) {
         if (this.refs.nameTxt.value === '') {
@@ -227,3 +227,4 @@ class ArchiveItem extends React.Component {
 }
 
 export default ArchiveItem;
+

@@ -1,6 +1,6 @@
-var webpack = require('webpack');
-var commonConfig = require('./webpack.config.js');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const commonConfig = require('./webpack.config.js');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 commonConfig.output.publicPath = '/static/';
 commonConfig.module.loaders.unshift(
@@ -26,3 +26,4 @@ commonConfig.plugins.push(
 );
 
 module.exports = commonConfig;
+

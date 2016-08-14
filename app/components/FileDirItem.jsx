@@ -12,7 +12,7 @@ class FileDirItem extends React.Component {
     }
     static getInitialExpansion(dirPath, defaultValue = false) {
         try {
-            let expanded = JSON.parse(window.sessionStorage.getItem('expanded_' + dirPath));
+            const expanded = JSON.parse(window.sessionStorage.getItem('expanded_' + dirPath));
             if (expanded === null) {
                 FileDirItem.storeExpansionState(dirPath, defaultValue);
                 return defaultValue;
@@ -39,7 +39,7 @@ class FileDirItem extends React.Component {
             }
         }
 
-        let initialExpanded = FileDirItem.getInitialExpansion(this.path, props.expanded);
+        const initialExpanded = FileDirItem.getInitialExpansion(this.path, props.expanded);
         this.toggleExpansion = this._toggleExpansion.bind(this);
         this.state = {
             expanded: initialExpanded
@@ -51,7 +51,7 @@ class FileDirItem extends React.Component {
         this.setState({ expanded: !this.state.expanded });
     }
     getDirItems() {
-        let path = this.path;
+        const path = this.path;
         return Array.from(this.dir.dirs.values()).map((dir, i) => {
             return (
                 <FileDirItem
@@ -95,3 +95,4 @@ class FileDirItem extends React.Component {
 }
 
 export default FileDirItem;
+

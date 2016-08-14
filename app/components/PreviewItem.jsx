@@ -6,10 +6,12 @@ class PreviewItem extends React.Component {
     constructor(props, context) {
         super(props, context);
 
-        this.state = this.state || {};
+        this.state = {};
         this.state.filePath = `${props.file.grade_category}/${props.file.subject_category}/${props.file.path}`;
-        this.state.fileUrl = `${config.downloadPrefix}/${this.state.filePath}`;
-        this.state.previewUrl = `${config.previewPrefix}/${encodeURIComponent(this.state.filePath)}`;
+        this.state = {
+            fileUrl: `${config.downloadPrefix}/${this.state.filePath}`,
+            previewUrl: `${config.previewPrefix}/${encodeURIComponent(this.state.filePath)}`
+        }
     }
 
     render() {
@@ -26,3 +28,4 @@ class PreviewItem extends React.Component {
 }
 
 export default PreviewItem;
+

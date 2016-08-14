@@ -31,8 +31,8 @@ export default () => {
             return;
         }
         if (result.hash !== thisVersion.hash) {
-            let now = new Date();
-            let year = now.getFullYear(),
+            const now = new Date();
+            const year = now.getFullYear(),
                 month = now.getMonth() + 1,
                 day = now.getDate();
             if (confirm(`
@@ -50,3 +50,4 @@ export default () => {
         console.log('Failed checking version.');
     });
 }
+

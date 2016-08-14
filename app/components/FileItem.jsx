@@ -16,13 +16,12 @@ class FileItem extends React.Component {
         if (this.state.isPic) {
             e.preventDefault();
             e.stopPropagation();
-            let isPreviewing = this.state.isPreviewing;
-            this.setState({ isPreviewing: !isPreviewing });
+            this.setState({ isPreviewing: !this.state.isPreviewing });
         }
     }
     render() {
         return (
-            <a href={this.state.fileUrl} target="_blank" className="list-group-item clickable" onClick={this.fileClick.bind(this)}>
+            <a href={this.state.fileUrl} target="_blank" className="list-group-item clickable" onClick={this.fileClick}>
                 <div>
                     {this.props.file.path}
                     {this.state.isPreviewing ?
@@ -35,3 +34,4 @@ class FileItem extends React.Component {
 }
 
 export default FileItem;
+

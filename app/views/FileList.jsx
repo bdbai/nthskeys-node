@@ -7,7 +7,7 @@ import FileDirItem from '../components/FileDirItem';
 class FileList extends React.Component {
     constructor(props, context) {
         super(props, context);
-        
+
         this.state = { loaded: false, dirs: {} };
     }
     componentDidMount() {
@@ -79,3 +79,4 @@ class FileList extends React.Component {
 }
 
 export default FileList;
+

@@ -2,7 +2,12 @@ import { Promise } from 'ES6Promise';
 
 import config from './ApiConfig'; 
 
-var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = function() {}) {
+const Extractor = function(
+    archiveId = '',
+    releasePw = '',
+    releaseBy = '',
+    outputCallback = () => {}
+) {
     // Check validation
     if (!releasePw.match(/^szsz(\d{12}\w{4}|\w{12})$/i)) {
         throw new Error('密码格式似乎不对。');
@@ -10,14 +15,14 @@ var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = funct
     if (releaseBy === '') {
         throw new Error('雷锋可是没有奖励的哟！请输入贡献者。');
     }
-    
-    let dfd = new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
 
-        let processResponse = function() {
+    const dfd = new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        const processResponse = function() {
             outputCallback(xhr);
         }
-        let stateChange = function() {
+        const stateChange = function() {
             if (xhr.readyState === 4) {
                 if (xhr.status === 0 || xhr.status >= 400 && xhr.status < 600) {
                     reject(JSON.parse(xhr.responseText));
@@ -26,7 +31,7 @@ var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = funct
                 }
             }
         }
-        let processError = function() {
+        const processError = function() {
             reject({ message: '网络错误。' });
         }
 
@@ -45,10 +50,10 @@ var Extractor = function(archiveId, releasePw, releaseBy, outputCallback = funct
             reject(ex);
         }
 
-
     });
 
     return dfd;
 }
 
 export default Extractor;
+

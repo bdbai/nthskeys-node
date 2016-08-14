@@ -1,8 +1,8 @@
-var path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var HashOutputPlugin = require('./HashOutputPlugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var webpack = require('webpack');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HashOutputPlugin = require('./HashOutputPlugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
     entry: './App.jsx',
@@ -37,3 +37,4 @@ module.exports = {
         ])
     ]
 }
+

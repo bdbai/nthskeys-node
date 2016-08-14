@@ -16,8 +16,8 @@ class Archives {
     static getArchives() {
         return GetOfflineAsync(`${config.apiPrefix}/archives`, 'archives')
         .then((archives) => {
-            let unreleasedArchives = archives.filter(archive => archive.status === 'unreleased');
-            let unreleasedCount = unreleasedArchives.length;
+            const unreleasedArchives = archives.filter(archive => archive.status === 'unreleased');
+            const unreleasedCount = unreleasedArchives.length;
             try { // Error if Symbol is missing.
                 for (let cb of window.archiveNewCountCallbacks) {
                     if (typeof cb === 'function') {
@@ -35,3 +35,4 @@ class Archives {
 }
 
 export default Archives;
+
