@@ -1,10 +1,7 @@
 {
-    "target": "ES5",
-    "files": [
-        "server.js",
-        "model.js",
-        "crawler.js",
-        "extractor.js",
-        "typings/index.d.ts"
+    "target": "ES6",
+    "exclude": [
+        "node_modules",
+        "app/node_modules"
     ]
 }

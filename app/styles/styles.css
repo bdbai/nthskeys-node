@@ -25,7 +25,10 @@
     float: right;
 }
 /* End: force navbar not to collapse */
-
+.daodream-container .daodream-launcher-button {
+    max-width: 12vw;
+    max-height: 12vw;
+}
 .new-num {
     width: 1.5em;
     height: 1.5em;
