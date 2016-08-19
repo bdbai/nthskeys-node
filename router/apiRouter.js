@@ -5,6 +5,7 @@ const model = require('../lib/model');
 const Cron = require('../lib/cron');
 const Crawler = require('../lib/crawler');
 const Extractor = require('../lib/extractor');
+const utils = require('../lib/utils');
 
 const apiRouter = express.Router();
 const crawler = new Crawler();
